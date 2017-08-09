@@ -1,0 +1,126 @@
+﻿@{
+    Layout = "~/Views/Shared/_LayoutTab.cshtml";
+    ViewBag.Title = "下载记录";
+}
+@model AdDowloadQueryViewModel
+@section styles{
+    <link href="~/content/tables.css" type="text/css" rel="stylesheet" />
+    <style>
+        .table-wrapper, .table-wrapper .filter-block {
+            margin-bottom: 15px;
+        }
+    </style>
+}
+<div id="pad-wrapper" ng-app="dlRecordApp" ng-controller="DlRecordCtrl">
+    <div class="table-wrapper products-table section">
+        <form id="queryForm" class="form-inline">
+            <div class="row filter-block">
+                <div class="form-group">
+                    @Html.LabelFor(m => m.Province):
+                    @Html.DropDownListFor(m => m.Province, new List<SelectListItem>(), new { @class = "form-control" })
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.City):
+                    @Html.DropDownListFor(m => m.City, new List<SelectListItem>(), new { @class = "form-control" })
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.Region):
+                    @Html.DropDownListFor(m => m.Region, new List<SelectListItem>(), new { @class = "form-control" })
+                </div>
+                <div class="input-group col-md-4">
+                    @Html.TextBoxFor(m => m.QueryText, new { @class = "form-control", placeholder = "请输入相关信息" })
+                    <span class="input-group-btn">
+                        <a href="javascript:;" class="btn btn-primary" ng-click="getList()">
+                            <span class="glyphicon glyphicon-search"></span>
+                            搜  索
+                        </a>
+                    </span>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="row">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th class="col-md-1">
+                        <span class="line"></span>
+                        终端名称
+                    </th>
+                    <th class="col-md-1">
+                        <span class="line"></span>
+                        @Html.DisplayNameFor(m => m.Province)
+                    </th>
+                    <th class="col-md-1">
+                        <span class="line"></span>
+                        @Html.DisplayNameFor(m => m.City)
+                    </th>
+                    <th class="col-md-1">
+                        <span class="line"></span>
+                        @Html.DisplayNameFor(m => m.Region)
+                    </th>
+                    <th class="col-md-1">
+                        <span class="line"></span>
+                        @Html.DisplayNameFor(m => m.AdPackageName)
+                    </th>
+                    <th class="col-md-1">
+                        <span class="line"></span>
+                        @Html.DisplayNameFor(m => m.AdPackagePath)
+                    </th>
+                    <th class="col-md-1">
+                        <span class="line"></span>
+                        @Html.DisplayNameFor(m => m.Url)
+                    </th>
+
+                    <th class="col-md-1">
+                        <span class="line"></span>
+                        @Html.DisplayNameFor(m => m.IP)
+                    </th>
+                    <th class="col-md-1">
+                        <span class="line"></span>
+                        @Html.DisplayNameFor(m => m.Count)
+                    </th>
+                    <th class="col-md-2">
+                        <span class="line"></span>
+                        @Html.DisplayNameFor(m => m.LastDowloadDate)
+                    </th>
+                    <th class="col-md-2">
+                        <span class="line"></span>
+                        @Html.DisplayNameFor(m => m.CreateDate)
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="c in List">
+                    <td ng-bind="c.Name"></td>
+                    <td ng-bind="c.Province  |areaFilter"></td>
+                    <td ng-bind="c.Province  |areaFilter:c.City"></td>
+                    <td ng-bind="c.Province  |areaFilter:c.City:c.Region"></td>
+                    <td ng-bind="c.AdPackageName"></td>
+                    <td ng-if="c.Path.length>10">
+                        <abbr title="{{c.Path}}" ng-bind="c.Path.substring(0,10)+'...'"></abbr>
+                    </td>
+                    <td ng-if="c.Path.length<=10">
+                        {{c.Path}}
+                    </td>
+                    <td ng-if="c.Url.length>10">
+                        <a href="{{c.Url}}" target="_blank">
+                            <abbr title="{{c.Url}}" ng-bind="c.Url.substring(0,10)+'...'"></abbr>
+                        </a>
+                    </td>
+                    <td ng-if="c.Url.length<=10" ng-bind="c.Url"></td>
+                    <td ng-bind="c.IP"></td>
+                    <td ng-bind="c.Count"></td>
+                    <td ng-bind="c.LastDowloadDateDisplay"></td>
+                    <td ng-bind="c.CreateDateDisplay"></td>
+                </tr>
+            </tbody>
+        </table>
+        @Html.Partial("_PaginationPartial")
+    </div>
+</div>
+@section scripts{
+    @Scripts.Render("~/bundles/angular")
+    <script src="~/Scripts/jquery.area.js"></script>
+    <script src="~/Scripts/page/page.adDowload.js"></script>
+}

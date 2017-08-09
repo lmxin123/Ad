@@ -1,0 +1,62 @@
+﻿<div class="modal fade" id="detailModal" tabindex="-1" role="dialog" aria-labelledby="detailModal" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">内容详情</h4>
+            </div>
+            <div class="modal-body">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th class="col-md-1">
+                                <span class="line"></span>
+                                缩略图
+                            </th>
+                            <th class="col-md-1">
+                                <span class="line"></span>
+                                名称
+                            </th>
+                            <th class="col-md-1">
+                                <span class="line"></span>
+                                类型
+                            </th>
+                            <th class="col-md-1">
+                                <span class="line"></span>
+                                文件大小
+                            </th>
+                            <th class="col-md-1">
+                                <span class="line"></span>
+                                存储路径
+                            </th>
+                            <th class="col-md-2">
+                                <span class="line"></span>
+                                提交时间
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="d in DetailList">
+                            <td><img src="{{d.ThumbPath}}" width="60" /></td>
+                            <td ng-if="d.FileName.length>10">
+                                <abbr title="{{d.FileName}}" ng-bind="d.FileName.length>10?d.FileName.substring(0,10)+'...':d.FileName"></abbr>
+                            </td>
+                            <td ng-if="d.FileName.length<=10">
+                                {{d.FileName}}
+                            </td>
+                            <td>{{d.ContentType}}</td>
+                            <td>{{d.SizeDisplay}}</td>
+                            <td ng-if="d.StoragePath.length>10">
+                                <abbr title="{{d.StoragePath}}" ng-bind="d.StoragePath.length>10?d.StoragePath.substring(0,10)+'...':d.StoragePath"></abbr>
+                            </td>
+                            <td ng-if="d.StoragePath.length<=10">
+                                {{d.StoragePath}}
+                            </td>
+                            <td>{{d.CreateDateDisplay}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

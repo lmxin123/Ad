@@ -1,0 +1,171 @@
+﻿@using Framework.Common;
+@model AddSchedulingViewModel
+<style>
+    #adFilterFrom label, #adFilterFrom div {
+        padding-left: 3px;
+        padding-right: 3px;
+        width: inherit;
+    }
+
+    #adFilterFrom .input-group {
+        padding-left: 15px;
+    }
+</style>
+<div class="modal fade" id="schedulingModal" tabindex="-1" role="dialog" aria-labelledby="detailModal" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">{{scheduling.ID===''?'新建':'修改'}}排期</h4>
+            </div>
+            <div class="modal-body">
+                <form id="schedulingForm" class="form-horizontal" role="form" action="/adScheduling/create">
+                    @Html.HiddenFor(m => m.ID, new { ng_model = "scheduling.ID" })
+                    @Html.HiddenFor(m => m.DeviceID, new { ng_model = "scheduling.DeviceID" })
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">@Html.DisplayNameFor(m => m.Name)<span class="hdy-red">*</span>：</label>
+                        <div class="col-sm-4">
+                            @Html.TextBoxFor(m => m.Name, new { @class = "form-control", ng_model = "scheduling.Name", ng_disabled = "expired" })
+                            @Html.ValidationMessageFor(m => m.Name)
+                        </div>
+                        <label class="col-sm-2 control-label">@Html.DisplayNameFor(m => m.DeviceName)：</label>
+                        <div class="col-sm-4">
+                            <div ng-bind="scheduling.DeviceName" class="form-control-static"></div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">@Html.DisplayNameFor(m => m.BeginPlayDate)<span class="hdy-red">*</span>：</label>
+                        <div class="col-sm-2">
+                            @Html.TextBoxFor(m => m.BeginPlayDate, new { @class = "form-control", ng_model = "scheduling.BeginPlayDate", placeholder = "开始日期", @readonly = true })
+                            @Html.ValidationMessageFor(m => m.BeginPlayDate)
+                        </div>
+                        <div class="col-sm-2">
+                            @Html.TextBoxFor(m => m.EndPlayDate, new { @class = "form-control", ng_model = "scheduling.EndPlayDate", placeholder = "结束日期", @readonly = true })
+                            @Html.ValidationMessageFor(m => m.EndPlayDate)
+                        </div>
+                        <label class="col-sm-2 control-label">@Html.DisplayNameFor(m => m.Order)<span class="hdy-red">*</span></label>
+                        <div class="col-sm-3">
+                            @Html.TextBoxFor(m => m.Order, new { @class = "form-control", ng_model = "scheduling.Order", ng_disabled = "expired" })
+                            @Html.ValidationMessageFor(m => m.Order)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">@Html.DisplayNameFor(m => m.PlayCount)<span class="hdy-red">*</span>：</label>
+                        <div class="col-sm-4">
+                            @Html.TextBoxFor(m => m.PlayCount, new { @class = "form-control", ng_model = "scheduling.PlayCount", type = "number", ng_disabled = "expired" })
+                            @Html.ValidationMessageFor(m => m.PlayCount)
+                        </div>
+                        <label class="col-sm-2 control-label">@Html.DisplayNameFor(m => m.Loop)：</label>
+                        <div class="col-sm-4">
+                            <div class="checkbox">
+                                @Html.CheckBoxFor(m => m.Loop, new { @class = "checkedbox", ng_model = "scheduling.Loop", ng_disabled = "expired" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">@Html.DisplayNameFor(m => m.PlayTimes)<span class="hdy-red">*</span>：</label>
+                        <div class="col-sm-10" id="playTimesContainer">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">@Html.DisplayNameFor(m => m.Remark)：</label>
+                        <div class="col-sm-8">
+                            @Html.TextAreaFor(m => m.Remark, new { @class = "form-control", ng_model = "scheduling.Remark", ng_disabled = "expired" })
+                        </div>
+                    </div>
+                </form>
+                <hr />
+                <div class="row">
+                    <form id="adFilterFrom" class="form-horizontal" role="form" action="">
+                        <input type="hidden" name="RecordState" value="@RecordStates.AuditPass" />
+                        <label class="col-sm-1 control-label">@Html.DisplayNameFor(m => m.Province)：</label>
+                        <div class="col-sm-1">
+                            @Html.DropDownListFor(m => m.Province, new List<SelectListItem>(), new { @class = "form-control" })
+                        </div>
+                        <label class="col-sm-1 control-label">@Html.DisplayNameFor(m => m.City)：</label>
+                        <div class="col-sm-1">
+                            @Html.DropDownListFor(m => m.City, new List<SelectListItem>(), new { @class = "form-control col-sm-2" })
+                        </div>
+                        <label class="col-sm-1 control-label">@Html.DisplayNameFor(m => m.Region)：</label>
+                        <div class="col-sm-1">
+                            @Html.DropDownListFor(m => m.Region, new List<SelectListItem>(), new { @class = "form-control col-sm-2" })
+                        </div>
+                        <label class="col-sm-1 control-label">
+                            @Html.CheckBox("IncludeExpired")显示过期内容
+                        </label>
+                        <div class="input-group col-md-3">
+                            <input name="QueryText" type="text" class="form-control  col-sm-1" placeholder="请输入内容相关信息" />
+                            <span class="input-group-btn">
+                                <a id="btnQuery" href="javascript:;" class="btn btn-primary" ng-click="getAdList()">搜  索</a>
+                            </span>
+                        </div>
+                    </form>
+                </div>
+                <div>
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th width="30"> <span class="line"></span><input type="checkbox" name="adId" /></th>
+                                <th width="100">
+                                    <span class="line"></span>
+                                    内容名称
+                                </th>
+                                <th width="100">
+                                    <span class="line"></span>
+                                    商户名称
+                                </th>
+                                <th width="60">
+                                    <span class="line"></span>
+                                    播放省份
+                                </th>
+                                <th width="60">
+                                    <span class="line"></span>
+                                    播放城市
+                                </th>
+                                <th width="60">
+                                    <span class="line"></span>
+                                    播放县/区
+                                </th>
+                                <th width="50">
+                                    <span class="line"></span>
+                                    播放日期
+                                </th>
+                                <th width="50">
+                                    <span class="line"></span>
+                                    结束日期
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody id="adContainter">
+                            <tr ng-repeat="a in AdList">
+                                <td><input type="checkbox" name="adId" value="{{a.ID}}" ng-checked="checked" ng-init="checked=setDetailCheck(a.ID)" ng-click="check(a.ID,$event)" /></td>
+                                <td ng-bind="a.Name"></td>
+                                <td ng-bind="a.Merchant.Name"></td>
+                                <td ng-bind="a.Province  |areaFilter"></td>
+                                <td ng-bind="a.Province  |areaFilter:a.City"></td>
+                                <td ng-bind="a.Province  |areaFilter:a.City:a.Region"></td>
+                                <td ng-bind="a.BeginPlayDate"> </td>
+                                <td ng-bind="a.EndPlayDate"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div ng-hide="adTotalItems<adMaxSize">
+                        <hr />
+                        <ul uib-pagination first-text="首页" previous-text="上一页" next-text="下一页" last-text="末页" total-items="adTotalItems" ng-model="adCurrentPage" items-per-page="adPageSize" ng-change="getAdList()" class="pagination-sm" boundary-link-numbers="true" rotate="false"></ul>
+                    </div>
+                </div>
+            </div>
+            <div ng-hide="expired" class="modal-footer">
+                <button id="btnCreate" type="button" class="btn btn-primary">保 存</button>
+                @if (User.Identity.CheckActionRight("0302", ActionTypes.Delete))
+                {
+                    <button ng-show="scheduling.ID!==''" id="btnDelete" data-delete="false" type="button" class="btn btn-danger">删 除</button>
+                }
+                <button type="button" class="btn btn-default" data-dismiss="modal">取 消</button>
+            </div>
+            <div ng-show="expired" class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关 闭</button>
+            </div>
+        </div>
+    </div>
+</div>

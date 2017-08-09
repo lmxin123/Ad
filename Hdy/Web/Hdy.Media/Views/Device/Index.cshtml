@@ -1,0 +1,277 @@
+﻿@{
+    Layout = "~/Views/Shared/_LayoutTab.cshtml";
+    ViewBag.Title = "终端管理";
+}
+@model DeviceModel
+@section styles{
+    <link href="~/content/tables.css" type="text/css" rel="stylesheet" />
+    <style>
+        .table-wrapper .table ul.actions {
+            float: none;
+        }
+
+        .table-wrapper, .table-wrapper .filter-block {
+            margin-bottom: 15px;
+        }
+    </style>
+}
+<div id="pad-wrapper" ng-app="deviceApp" ng-controller="DeviceCtrl">
+    <div class="table-wrapper products-table section">
+        <form id="queryForm" class="form-inline">
+            <div class="row filter-block">
+                <div class="form-group">
+                    @Html.LabelFor(m => m.Province):
+                    @Html.DropDownListFor(m => m.Province, new List<SelectListItem>(), new { @class = "form-control" })
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.City):
+                    @Html.DropDownListFor(m => m.City, new List<SelectListItem>(), new { @class = "form-control" })
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.Region):
+                    @Html.DropDownListFor(m => m.Region, new List<SelectListItem>(), new { @class = "form-control" })
+                </div>
+                <div class="form-group">
+                    <a id="btnQuery" href="javascript:;" class="btn btn-primary" ng-click="getList()">搜  索</a>
+                </div>
+                @if (User.Identity.CheckActionRight("0401", ActionTypes.Create))
+                {
+                    <div class="form-group">
+                        <a class="btn btn-primary" href="javascript:;" ng-click="deviceModal()">
+                            <i class="icon-plus"></i>
+                            添加终端
+                        </a>
+                    </div>
+                }
+            </div>
+        </form>
+        <div class="row">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th width="100">
+                            <span class="line"></span>
+                            @Html.DisplayNameFor(m => m.Province)
+                        </th>
+                        <th width="100">
+                            <span class="line"></span>
+                            @Html.DisplayNameFor(m => m.City)
+                        </th>
+                        <th width="100">
+                            <span class="line"></span>
+                            @Html.DisplayNameFor(m => m.Region)
+                        </th>
+                        <th width="100">
+                            <span class="line"></span>
+                            @Html.DisplayNameFor(m => m.OpenArea)
+                        </th>
+                        <th width="200">
+                            <span class="line"></span>
+                            @Html.DisplayNameFor(m => m.Name)
+                        </th>
+                        <th width="200">
+                            <span class="line"></span>
+                            @Html.DisplayNameFor(m => m.DeviceCode)
+                        </th>
+                        <th width="200">
+                            <span class="line"></span>
+                            @Html.DisplayNameFor(m => m.Address)
+                        </th>
+                        <th width="100">
+                            <span class="line"></span>
+                            @Html.DisplayNameFor(m => m.Contact)
+                        </th>
+                        <th width="70">
+                            <span class="line"></span>
+                            @Html.DisplayNameFor(m => m.Count)
+                        </th>
+                        <th width="100">
+                            <span class="line"></span>
+                            @Html.DisplayNameFor(m => m.IsOnline)
+                        </th>
+                        <th width="250">
+                            <span class="line"></span>
+                            @Html.DisplayNameFor(m => m.CreateDate)
+                        </th>
+                        <th width="80">
+                            <span class="line"></span>
+                            @Html.DisplayNameFor(m => m.Operator)
+                        </th>
+                        <th width="300">
+                            <span class="line"></span>
+                            @Html.DisplayNameFor(m => m.Remark)
+                        </th>
+                        <th width="300">
+                            <span class="line"></span>
+                            操作
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="c in List">
+                        <td ng-bind="c.Province  |areaFilter"></td>
+                        <td ng-bind="c.Province  |areaFilter:c.City"></td>
+                        <td ng-bind="c.Province  |areaFilter:c.City:c.Region"></td>
+                        <td ng-bind="c.OpenAreaDisplay"></td>
+                        <td ng-bind="c.Name"></td>
+                        <td ng-bind="c.DeviceCode"></td>
+                        <td ng-bind="c.Address"></td>
+                        <td ng-bind="c.Contact"></td>
+                        <td ng-bind="c.Count"></td>
+                        <td ng-bind="c.IsOnlineDesplay"></td>
+                        <td ng-bind="c.CreateDateDisplay"></td>
+                        <td ng-bind="c.Operator"></td>
+                        <td ng-bind="c.Remark"></td>
+                        <td>
+                            <ul class="actions">
+                                @if (User.Identity.CheckActionRight("0401", ActionTypes.Update))
+                                {
+                                    <li>
+                                        <a href="javascript:;" ng-click="deviceModal(c.ID)">修改</a>
+                                    </li>
+                                }
+                                @if (User.Identity.CheckActionRight("0401", ActionTypes.Delete))
+                                {
+                                    <li class="last">
+                                        <a href="javascript:;" ng-click="delete(c.ID,$event)">删除</a>
+                                    </li>
+                                }
+                            </ul>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            @Html.Partial("_PaginationPartial")
+        </div>
+    </div>
+    <div class="modal fade" id="deviceModal" tabindex="-1" role="dialog" aria-labelledby="deviceModal" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">{{device.ID?'修改':'添加'}}终端信息</h4>
+                </div>
+                <div class="modal-body">
+                    <form role="form" method="post" class="form-horizontal" id="deviceForm">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="ID" value="{{device.ID}}" />
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">@Html.DisplayNameFor(m => m.Province)<span class="hdy-red">*</span>：</label>
+                            <div class="col-sm-7">
+                                @Html.DropDownListFor(m => m.Province, new List<SelectListItem>(), new { @class = "form-control", data_clear = false })
+                                @Html.ValidationMessageFor(m => m.Province)
+                                @Html.Hidden("hProvince", Model.Province)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">@Html.DisplayNameFor(m => m.City)<span class="hdy-red">*</span>：</label>
+                            <div class="col-sm-7">
+                                @Html.DropDownListFor(m => m.City, new List<SelectListItem>(), new { @class = "form-control", data_clear = false })
+                                @Html.ValidationMessageFor(m => m.City)
+                                @Html.Hidden("hCity", Model.City)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">@Html.DisplayNameFor(m => m.Region)<span class="hdy-red">*</span>：</label>
+                            <div class="col-sm-7">
+                                @Html.DropDownListFor(m => m.Region, new List<SelectListItem>(), new { @class = "form-control", data_clear = false })
+                                @Html.ValidationMessageFor(m => m.Region)
+                                @Html.Hidden("hRegion", Model.Region)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">@Html.DisplayNameFor(m => m.OpenArea)：</label>
+                            <div class="col-sm-7">
+                                @Html.DropDownListFor(m => m.OpenArea, new List<SelectListItem>(), new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">@Html.DisplayNameFor(m => m.Name)<span class="hdy-red">*</span>：</label>
+                            <div class="col-sm-7">
+                                @Html.TextBoxFor(m => m.Name, new { @class = "form-control", @ng_model = "device.Name" })
+                                @Html.ValidationMessageFor(m => m.Name)
+                            </div>
+                        </div>
+                        @*<div class="form-group">
+                            <label class="col-sm-3 control-label">@Html.DisplayNameFor(m => m.DeviceCode)<span class="hdy-red">*</span>：</label>
+                            <div class="col-sm-7">
+                                @Html.TextBoxFor(m => m.DeviceCode, new { @class = "form-control", @ng_model = "device.DeviceCode", @readonly = true, data_clear = false })
+                                @Html.ValidationMessageFor(m => m.DeviceCode)
+                            </div>
+                        </div>*@
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">@Html.DisplayNameFor(m => m.CategoryID)<span class="hdy-red">*</span>：</label>
+                            <div class="col-sm-7">
+                                @Html.DropDownListFor(m => m.CategoryID, (List<SelectListItem>)ViewBag.CategoryID, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(m => m.CategoryID)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">@Html.DisplayNameFor(m => m.Address)<span class="hdy-red">*</span>：</label>
+                            <div class="col-sm-7">
+                                @Html.TextBoxFor(m => m.Address, new { @class = "form-control", @ng_model = "device.Address" })
+                                @Html.ValidationMessageFor(m => m.Address)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">@Html.DisplayNameFor(m => m.Contact)<span class="hdy-red">*</span>：</label>
+                            <div class="col-sm-7">
+                                @Html.TextBoxFor(m => m.Contact, new { @class = "form-control", @ng_model = "device.Contact" })
+                                @Html.ValidationMessageFor(m => m.Contact)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">@Html.DisplayNameFor(m => m.Phone)<span class="hdy-red">*</span>：</label>
+                            <div class="col-sm-7">
+                                @Html.TextBoxFor(m => m.Phone, new { @class = "form-control", @ng_model = "device.Phone", placeholder = "格式如13988888888，0755-88888888-001" })
+                                @Html.ValidationMessageFor(m => m.Phone)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">@Html.DisplayNameFor(m => m.Count)<span class="hdy-red">*</span>：</label>
+                            <div class="col-sm-7">
+                                @Html.TextBoxFor(m => m.Count, new { @class = "form-control", @ng_model = "device.Count", type = "number" })
+                                @Html.ValidationMessageFor(m => m.Count)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">@Html.DisplayNameFor(m => m.Email)<span class="hdy-red">*</span>：</label>
+                            <div class="col-sm-7">
+                                @Html.TextBoxFor(m => m.Email, new { @class = "form-control", @ng_model = "device.Email" })
+                                @Html.ValidationMessageFor(m => m.Email)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">@Html.DisplayNameFor(m => m.IsOnline)：</label>
+                            <div class="col-sm-7">
+                                <label class="radio-inline">
+                                    <input type="radio" name="IsOnline" checked value="Online">在线
+                                </label>
+                                <label class="checkbox-inline">
+                                    <input type="radio" name="IsOnline" value="OffLine">离线
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">@Html.DisplayNameFor(m => m.Remark)：</label>
+                            <div class="col-sm-7">
+                                @Html.TextAreaFor(m => m.Remark, 4, 0, new { @class = "form-control", @ng_model = "device.Remark" })
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button id="btnSaveDevice" type="button" class="btn btn-primary">保 存</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取 消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    @Scripts.Render("~/bundles/angular")
+    <script src="~/Scripts/jquery.area.js"></script>
+    <script src="~/Scripts/page/page.device.js"></script>
+}

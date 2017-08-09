@@ -1,0 +1,21 @@
+﻿@{ 
+    Layout = "~/Views/Shared/_LayoutTab.cshtml";
+}
+@section styles{
+    <link href="~/Content/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+    @Styles.Render("~/Content/jQuery-File-Upload")
+<style>
+    .files audio, .files video{
+            max-width: 100px;
+    }
+    </style>
+}
+@Html.Partial("_AdFormPartial")
+@section scripts{
+    @Scripts.Render("~/bundles/jQuery-File-Upload")
+    <script src="~/Scripts/jquery.area.js"></script>
+    <script src="~/Scripts/bootstrap-datetimepicker.min.js"></script>
+    <script src="~/Scripts/bootstrap-datetimepicker.zh-CN.js"></script>
+    <script src="~/Scripts/plugins/fileupload.js"></script>
+    <script src="~/Scripts/page/page.adCreate.js"></script>
+}

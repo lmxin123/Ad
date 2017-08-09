@@ -1,0 +1,134 @@
+﻿/*==================================
+ *自定义类，部分依赖bootstrap
+ ===================================
+*/
+body{
+	font-family: "Microsoft YaHei","微软雅黑";
+	}
+.container{
+	width: 1170px !important ;
+	}
+ul{list-style:none;}		
+/*宽度*/
+.w100{width: 100%}
+	
+/*背景颜色*/
+.bg-f5{background: #f5f5f5;}
+.bg-df03{background: #df0303;}
+.bg-white{background: #fff;}
+
+/*字体颜色*/
+a{color:#333;}
+.col-red,ul.col-red li a{color:#de0303;}
+.col-white{color:#fff;}
+.col-a9{color:#a9a9a9;}
+.col-9{color:#999;}
+
+/*文字大小*/
+.font-48{font-size:48px;}
+
+/*外边距*/
+.mar-b32{margin-bottom:32px;}
+.mar-b13,ul.mar-b13 li{margin-bottom:13px;}
+
+/*内边距*/
+.pad-tb8{padding:8px 0;}
+
+/*边框*/
+.bor-bd{border-bottom:1px solid #ddd;}
+
+
+/*图片*/
+img.img64{width:64px;height:64px;}
+img.img120{height:120px;width:120px;}
+
+/*光标*/
+.cursor{cursor: pointer;}	
+
+/*清除浮动*/
+.clear{clear:both;}
+
+/*控制文字显示一行*/
+.limit{
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	}
+	
+/*搜索*/
+.as-input{
+	outline: none;
+	border:1px solid #ddd;
+	height:36px;
+	width:100%;
+	font-size:14px;
+	padding:3px;
+	}
+.as-pad-r0{
+	padding-left:0;
+	}
+.as-search{
+	font-size:14px;
+	border-radius:0;
+	height:36px;
+	line-height:18px;
+	margin-top:9px;
+	padding-left:38px;
+	padding-right:38px;
+	}
+	
+/*购物车按钮*/
+.radius{
+	border-radius:0;
+	}	
+.mar-b0{margin-bottom:0;}
+
+/*底部*/
+.as-footab{
+	width:100%;
+	border-bottom: 1px solid #ddd;
+	border-left: 1px solid #ddd;
+	border-right: 1px solid #ddd;
+	}
+	
+/*备案信息*/
+.pad-tb52{
+	padding:52px 0;
+	}
+	
+/*加减数量*/
+.sum-btn{
+	font-size:24px;
+	font-weight:900;
+	display:inline-block;
+	width:26px;
+	height:26px;
+	border: 1px solid #e8e8e8;
+	background-color: #f0f0f0;
+	color: #888;
+	text-align:center;
+	line-height:26px;
+	}
+.sum-input{
+	display:inline-block;
+	width:48px;
+	height:26px;
+	border: 1px solid #e8e8e8;
+	color: #666;
+	text-align: center;
+	line-height:26px;
+	outline:none;
+	background: #fff;
+	}
+	
+/*选项卡*/
+.bornone{border:1px solid #ddd;border-top:none;}
+
+/*个人中心--左侧菜单*/
+dl.suojin dd{text-indent:1em;}
+dl.suojin dd a{color:#666;}
+dl.suojin dd,dl.line-h32 dt{line-height:38px;}
+dl.fw dt{font-size: 20px;font-weight: 200;}
+
+/*加减数*/
+.sum-center{margin:0 auto;width:100px;}

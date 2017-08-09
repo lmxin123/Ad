@@ -1,0 +1,297 @@
+﻿@model CorpModel
+@using Framework.Common.Extensions;
+<div id="pad-wrapper" class="new-user">
+    @*<div class="row header">
+            <div class="col-md-12">
+                <h3>@ViewBag.Title </h3>
+            </div>
+        </div>*@
+    @if (!string.IsNullOrEmpty(Model.RefusalReasons))
+    {
+        <div class="row">
+            <div class="col-md-6">
+                <div class="alert alert-danger" role="alert">商户资料审核失败！@Model.RefusalReasons</div>
+            </div>
+        </div>
+    }
+    <div class="row form-wrapper">
+        <div class="col-md-6 with-sidebar">
+            <form class="form-horizontal" enctype="multipart/form-data" role="form" method="post" action="@Url.Action("Create","CorpInfo")" id="createMerForm">
+                @Html.HiddenFor(m => m.ID)
+                @Html.HiddenFor(m => m.UserID)
+                @Html.AntiForgeryToken()
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">
+                        @Html.DisplayNameFor(m => m.Name)<span class="hdy-red">*</span>
+                    </label>
+                    <div class="col-sm-6">
+                        @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.Name)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">
+                        @Html.DisplayNameFor(m => m.MerchantType)<span class="hdy-red">*</span>
+                    </label>
+                    <div class="col-sm-6">
+                        @Html.DropDownListFor(m => m.MerchantType, EnumExtensions.GetDisplayNames<MerchantTypes, string>(defaultTxt: "请选择", requireAll: false), new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.MerchantType)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">
+                        @Html.DisplayNameFor(m => m.Province)<span class="hdy-red">*</span>
+                    </label>
+                    <div class="col-sm-6">
+                        @Html.DropDownListFor(m => m.Province, new List<SelectListItem>(), new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.Province)
+                        @Html.Hidden("hProvince", Model.Province)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">
+                        @Html.DisplayNameFor(m => m.City)<span class="hdy-red">*</span>
+                    </label>
+                    <div class="col-sm-6">
+                        @Html.DropDownListFor(m => m.City, new List<SelectListItem>(), new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.City)
+                        @Html.Hidden("hCity", Model.City)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">
+                        @Html.DisplayNameFor(m => m.Region)<span class="hdy-red">*</span>
+                    </label>
+                    <div class="col-sm-6">
+                        @Html.DropDownListFor(m => m.Region, new List<SelectListItem>(), new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.Region)
+                        @Html.Hidden("hRegion", Model.Region)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">
+                        @Html.DisplayNameFor(m => m.Address)<span class="hdy-red">*</span>
+                    </label>
+                    <div class="col-sm-6">
+                        @Html.TextBoxFor(m => m.Address, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.Address)
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">
+                        @Html.DisplayNameFor(m => m.Contact)<span class="hdy-red">*</span>
+                    </label>
+                    <div class="col-sm-6">
+                        @Html.TextBoxFor(m => m.Contact, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.Contact)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">
+                        @Html.DisplayNameFor(m => m.Phone)<span class="hdy-red">*</span>
+                    </label>
+                    <div class="col-sm-6">
+                        @Html.TextBoxFor(m => m.Phone, new { @class = "form-control", placeholder = "如13988888888，0755-88888888-001" })
+                        @Html.ValidationMessageFor(m => m.Phone)
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.PostCode, new { @class = "col-sm-3 control-label" })
+                    <div class="col-sm-6">
+                        @Html.TextBoxFor(m => m.PostCode, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.PostCode)
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.Fax, new { @class = "col-sm-3 control-label" })
+                    <div class="col-sm-6">
+                        @Html.TextBoxFor(m => m.Fax, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.Fax)
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.Email, new { @class = "col-sm-3 control-label" })
+                    <div class="col-sm-6">
+                        @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.Email)
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.LegalPerson, new { @class = "col-sm-3 control-label" })
+                    <div class="col-sm-6">
+                        @Html.TextBoxFor(m => m.LegalPerson, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.LegalPerson)
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.LegalPersonCertificateType, new { @class = "col-sm-3 control-label" })
+                    <div class="col-sm-6">
+                        @Html.DropDownList("LegalPersonCertificateType", EnumExtensions.GetDisplayNames<LegalPersonCertificateTypes, int>(requireAll: false), new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.LegalPersonIdentityNo, new { @class = "col-sm-3 control-label" })
+                    <div class="col-sm-6">
+                        @Html.TextBoxFor(m => m.LegalPersonIdentityNo, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.LegalPersonIdentityNo)
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.BusinessLicenseNo, new { @class = "col-sm-3 control-label" })
+                    <div class="col-sm-6">
+                        @Html.TextBoxFor(m => m.BusinessLicenseNo, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.BusinessLicenseNo)
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.TaxRegistrationNo, new { @class = "col-sm-3 control-label" })
+                    <div class="col-sm-6">
+                        @Html.TextBoxFor(m => m.TaxRegistrationNo, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.TaxRegistrationNo)
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.BusinessLicensePath, new { @class = "col-sm-3 control-label" })
+                    <div class="col-sm-6" id="fileContainer">
+                        <span class="btn btn-success fileinput-button">
+                            <i class="glyphicon glyphicon-plus"></i>
+                            <span>选择文件</span>
+                            <input id="file" type="file" name="BusinessImg">
+                        </span>
+                        <br />
+                        <br />
+                        @if (!string.IsNullOrEmpty(Model.BusinessLicensePath))
+                        {
+                            <img src="@ViewBag.BusinessLicense" style="max-width:100px" />
+                        }
+                    </div>
+                    @Html.HiddenFor(m => m.BusinessLicensePath)
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.RegisteredAddress, new { @class = "col-sm-3 control-label" })
+                    <div class="col-sm-6">
+                        @Html.TextBoxFor(m => m.RegisteredAddress, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.RegisteredAddress)
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.BusinessScope, new { @class = "col-sm-3 control-label" })
+                    <div class="col-sm-6">
+                        @Html.TextAreaFor(m => m.BusinessScope, 4, 0, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.BusinessScope)
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.Summary, new { @class = "col-sm-3 control-label" })
+                    <div class="col-sm-6">
+                        @Html.TextAreaFor(m => m.Summary, 4, 0, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.Summary)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="text-center">
+                        <a id="btnSubmit" class="btn btn-primary start" href="javascript:;">
+                            <span class="glyphicon glyphicon-floppy-disk"></span>
+                            保 存
+                        </a>
+                        @if (ViewContext.RouteData.Values["action"].ToString().ToLower() != "index")
+                        {
+                            @Html.Raw("&nbsp; &nbsp;")
+                            <a class="btn btn-default" href="@(Request.QueryString["ref"])?isCancel=true">
+                                <i class="icon-reply"></i>
+                                取 消
+                            </a>
+                        }
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="col-md-3 form-sidebar pull-left">
+            <div class="alert alert-info">
+                <i class="icon-exclamation-sign pull-left"></i>
+                提交商户资料，带星号选项为必填项
+            </div>
+            <div class="alert alert-info hidden-tablet">
+                <i class="icon-lightbulb pull-left"></i>
+                上传的营业执照文件大小不能超过2M，支持bmp，gif，jpeg，png，tiff格式的图片文件
+            </div>
+        </div>
+    </div>
+</div>
+<div id="blueimp-gallery" class="blueimp-gallery blueimp-gallery-controls" data-filter=":even">
+    <div class="slides"></div>
+    <h3 class="title"></h3>
+    <a class="prev">‹</a>
+    <a class="next">›</a>
+    <a class="close">×</a>
+    <a class="play-pause"></a>
+    <ol class="indicator"></ol>
+</div>
+<script id="template-upload" type="text/x-tmpl">
+    {% for (var i=0, file; file=o.files[i]; i++) { %}
+    <tr class="template-upload fade">
+        <td>
+            <span class="preview"></span>
+        </td>
+        <td>
+            <p class="name">{%=file.name%}</p>
+            <strong class="error text-danger"></strong>
+        </td>
+        <td>
+            <p class="size">Processing...</p>
+            <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="progress-bar progress-bar-success" style="width:0%;"></div></div>
+        </td>
+        <td>
+            {% if (!i) { %}
+            <button class="btn btn-warning cancel">
+                <i class="glyphicon glyphicon-ban-circle"></i>
+                <span>取消</span>
+            </button>
+            {% } %}
+        </td>
+    </tr>
+    {% } %}
+</script>
+<script id="template-download" type="text/x-tmpl">
+    {% for (var i=0, file; file=o.files[i]; i++) { %}
+    <tr class="template-download fade">
+        <td>
+            <span class="preview">
+                {% if (file.thumbnailUrl) { %}
+                <a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" data-gallery><img src="{%=file.thumbnailUrl%}"></a>
+                {% } %}
+            </span>
+        </td>
+        <td>
+            <p class="name">
+                {% if (file.url) { %}
+                <a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" {%=file.thumbnailUrl?'data-gallery':''%}>{%=file.name%}</a>
+                {% } else { %}
+                <span>{%=file.name%}</span>
+                {% } %}
+            </p>
+            {% if (file.error) { %}
+            <div><span class="label label-danger">Error</span> {%=file.error%}</div>
+            {% } %}
+        </td>
+        <td>
+            <span class="size">{%=o.formatFileSize(file.size)%}</span>
+        </td>
+        <td>
+            {% if (file.deleteUrl) { %}
+            <button class="btn btn-danger delete" data-type="{%=file.deleteType%}" data-url="{%=file.deleteUrl%}" {% if (file.deletewithcredentials) { %} data-xhr-fields='{"withCredentials":true}' {% } %}>
+                <i class="glyphicon glyphicon-trash"></i>
+                <span>删除</span>
+            </button>
+            @*<input type="checkbox" name="delete" value="1" class="toggle">*@
+            {% } else { %}
+            <button class="btn btn-warning cancel">
+                <i class="glyphicon glyphicon-ban-circle"></i>
+                <span>取消</span>
+            </button>
+            {% } %}
+        </td>
+    </tr>
+    {% } %}
+</script>

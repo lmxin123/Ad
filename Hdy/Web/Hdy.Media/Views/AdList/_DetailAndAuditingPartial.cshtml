@@ -1,0 +1,131 @@
+﻿<div class="modal fade" id="detailModal" tabindex="-1" role="dialog" aria-labelledby="detailModal" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">内容详情</h4>
+            </div>
+            <div class="modal-body">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th class="col-md-1">
+                                <span class="line"></span>
+                                缩略图
+                            </th>
+                            <th class="col-md-1">
+                                <span class="line"></span>
+                                名称
+                            </th>
+                            <th class="col-md-1">
+                                <span class="line"></span>
+                                类型
+                            </th>
+                            <th class="col-md-1">
+                                <span class="line"></span>
+                                文件大小
+                            </th>
+                            <th class="col-md-1">
+                                <span class="line"></span>
+                                跳转地址
+                            </th>
+                            <th class="col-md-1">
+                                <span class="line"></span>
+                                存储路径
+                            </th>
+                            <th class="col-md-2">
+                                <span class="line"></span>
+                                提交时间
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="d in DetailList">
+                            <td ng-show="d.ContentType.indexOf('image')>-1"><img src="{{d.ThumbPath}}" width="60" /></td>
+                            <td ng-show="d.ContentType.indexOf('video')>-1">
+                                <video width="150" controls>
+                                    <source src="{{d.Remark}}" type="{{d.ContentType}}">
+                                </video>
+                            </td>
+                            <td ng-if="d.FileName.length>10">
+                                <abbr title="{{d.FileName}}" ng-bind="d.FileName.length>10?d.FileName.substring(0,10)+'...':d.FileName"></abbr>
+                            </td>
+                            <td ng-if="d.FileName.length<=10">
+                                {{d.FileName}}
+                            </td>
+                            <td>{{d.ContentType}}</td>
+                            <td>{{d.SizeDisplay}}</td>
+                            <td>
+                                <a href="{{d.RedirectUrl}}" target="_blank" title="点击跳转到链接 {{d.RedirectUrl}}" ng-bind="d.RedirectUrl.length>10?d.RedirectUrl.substring(0,10)+'...':d.RedirectUrl">
+                                </a>
+                            </td>
+                            <td ng-if="d.StoragePath.length>10">
+                                <abbr title="{{d.StoragePath}}" ng-bind="d.StoragePath.length>10?d.StoragePath.substring(0,10)+'...':d.StoragePath"></abbr>
+                            </td>
+                            <td ng-if="d.StoragePath.length<=10">
+                                {{d.StoragePath}}
+                            </td>
+                            <td>{{d.CreateDateDisplay}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <hr />
+
+                <form ng-show="Ad.RecordState===1" role="form" method="post" class="form-horizontal" id="checkForm" action="/adList/check">
+                    @if (User.Identity.CheckActionRight("0301", ActionTypes.Auditing))
+                    {
+                        <input type="hidden" name="ID" value="{{Ad.ID}}" />
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">审核状态：</label>
+                            <div class="col-sm-7">
+                                <label class="radio-inline">
+                                    <input type="radio" name="checkState" checked value="2" ng-click="radioClick($event)">审核通过
+                                </label>
+                                <label class="checkbox-inline">
+                                    <input type="radio" name="checkState" value="3" ng-click="radioClick($event)">审核不通过
+                                </label>
+                            </div>
+                        </div>
+                        <div id="rContainer" class="form-group hidden">
+                            <label class="col-sm-3 control-label">失败原因：</label>
+                            <div class="col-sm-7">
+                                <textarea id="txtRefusal" rows="4" cols="0" class="form-control"></textarea>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="form-horizontal">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">审核状态：</label>
+                                <div class="col-sm-7">
+                                    <p class="form-control-static text-info"><strong>未审核</strong> </p>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </form>
+                <div class="form-horizontal" ng-show="Ad.RecordState>1">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">审核状态：</label>
+                        <div class="col-sm-7">
+                            <p class="form-control-static text-success" ng-show="Ad.RecordState===2"><strong>审核通过</strong></p>
+                            <p class="form-control-static text-danger" ng-show="Ad.RecordState===3"><strong></strong>审核失败</p>
+                        </div>
+                    </div>
+                    <div id="refusalReasonsContainer" class="form-group">
+                        <label class="col-sm-3 control-label">失败原因：</label>
+                        <div class="col-sm-7">
+                            <p class="form-control-static" ng-bind="Ad.RefusalReasons"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="footerContainer" class="modal-footer">
+                <a id="btnCheck" ng-click="checkClick()" href="javascript:;" class="btn btn-primary">保 存</a>
+                <button type="button" class="btn btn-default" data-dismiss="modal">取 消</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,7 @@
+﻿@model IEnumerable<PlayTimesSelectorViewModel>
+@foreach (var item in Model)
+{
+    <label class="checkbox-inline">
+        <input type="checkbox" name="PlayTime" @item.Checked value="@item.Value" ng-disabled="expired">@item.Name
+    </label>
+}

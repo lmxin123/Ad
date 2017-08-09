@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Menus>
+  <Menu Code="01" Name="首页" Url="/home/index" Icon="icon-home"/>
+  <Menu Code="02" Name="商户管理" Icon="icon-reorder">
+    <SubMenu SubCode="0201" Name="完善资料" Url="/corpInfo/index" Select="true" Create="true" Update="true" Delete="false" Auditing="false"/>
+    <SubMenu SubCode="0202" Name="商户列表" Url="/corpList/index" Select="true" Create="true" Update="true" Delete="true" Auditing="true"/>
+    <SubMenu SubCode="0203" Name="我的内容" Url="/corpAd/index" Select="true" Create="true" Update="true" Delete="true" Auditing="false"/>
+  </Menu>
+  <Menu Code="03" Name="内容管理" Icon="icon-tasks">
+    <SubMenu SubCode="0301" Name="内容列表" Url="/adList/index" Select="true" Create="true" Update="true" Delete="true" Auditing="true"/>
+    <SubMenu SubCode="0302" Name="排期管理" Url="/adScheduling/index" Select="true" Create="true" Update="true" Delete="true" Auditing="false"/>
+    <SubMenu SubCode="0303" Name="下载记录" Url="/adDowload/index" Select="true"  Create="false" Update="false" Delete="false" Auditing="false"/>
+  </Menu>
+  <Menu Code="04" Name="终端管理" Icon="icon-desktop">
+    <SubMenu SubCode="0401" Name="终端列表" Url="/device/index" Select="true" Create="true" Update="true" Delete="true" Auditing="false"/>
+    <SubMenu SubCode="0402" Name="终端分类" Url="/deviceCategory/index" Select="true" Create="true" Update="true" Delete="true" Auditing="false"/>
+  </Menu>
+  <Menu Code="05" Name="系统管理" Icon="icon-cog">
+    <SubMenu SubCode="0501" Name="区域管理" Url="/openArea/index" Select="true" Create="true" Update="true" Delete="true" Auditing="false"/>
+    <SubMenu SubCode="0502" Name="用户管理" Url="/user/index" Select="true" Create="true" Update="true" Delete="true" Auditing="false"/>
+    <SubMenu SubCode="0503" Name="角色管理" Url="/role/index" Select="true" Create="true" Update="true" Delete="true" Auditing="false"/>
+    <SubMenu SubCode="0504" Name="权限管理" Url="/right/index" Select="true" Create="true" Update="true" Delete="true" Auditing="false"/>
+  </Menu>
+</Menus>

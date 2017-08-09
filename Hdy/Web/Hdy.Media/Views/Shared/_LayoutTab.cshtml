@@ -1,0 +1,37 @@
+﻿<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>海迪云- @ViewBag.Title</title>
+    <link rel="stylesheet" href="~/Content/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/Content/bootstrap-overrides.css" />
+    <link rel="stylesheet" href="~/Content/jquery-ui-1.10.2.custom.css" />
+    <link rel="stylesheet" href="~/Content/font-awesome.css" />
+    <link rel="stylesheet" href="~/Content/layout.css" />
+    <link rel="stylesheet" href="~/Content/icons.css" />
+    <link rel="stylesheet" href="~/Content/assets/css/frame.min.css" />
+    <link rel="stylesheet" href="~/Content/Site.css"/>
+    @RenderSection("styles", required: false)
+    @Scripts.Render("~/bundles/modernizr")
+</head>
+<body>
+        @RenderBody()
+    <div class="text-center hidden" id="loading">
+        <img src="~/content/assets/img/loading.gif"><br /><span>正在加载...</span><br />
+    </div>
+    @Scripts.Render("~/bundles/common")
+    <script type="text/javascript">
+        common.config.defaultLocation = {
+            province: '@AppSetting.DefaultLocation[0]',
+            city: '@AppSetting.DefaultLocation[1]',
+            region: '@AppSetting.DefaultLocation[2]'
+        };
+    </script>
+    @Html.Partial("_ValidationScriptsPartial")
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/plugins/ajaxbtn.js"></script>
+    @RenderSection("scripts", required: false)
+</body>
+</html>

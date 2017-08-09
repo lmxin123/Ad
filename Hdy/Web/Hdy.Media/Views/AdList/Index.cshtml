@@ -1,0 +1,206 @@
+﻿@using Framework.Common.Extensions;
+@using Framework.Common;
+@model AdQueryViewModel
+@{
+    Layout = "~/Views/Shared/_LayoutTab.cshtml";
+    ViewBag.Title = "内容列表";
+    var states = EnumExtensions.GetDisplayNames<RecordStates, int>()
+        .Where(item => new string[] { "0", "1", "2", "3", }.Contains(item.Value));
+}
+@section styles{
+    <link href="~/content/tables.css" type="text/css" rel="stylesheet" />
+    <link href="~/content/bootstrap.datepicker.css" type="text/css" rel="stylesheet">
+    <style>
+        .table-wrapper .table ul.actions {
+            float: none;
+        }
+
+        .table-wrapper, .table-wrapper .filter-block {
+            margin-bottom: 15px;
+        }
+
+            .table-wrapper td {
+                white-space: nowrap;
+                overflow: hidden;
+            }
+    </style>
+}
+
+<div id="pad-wrapper" ng-app="adApp" ng-controller="AdCtrl">
+    <div class="table-wrapper products-table section">
+        <form id="queryForm" class="form-inline">
+            <div class="row filter-block">
+                <div class="form-group">
+                    @Html.LabelFor(m => m.Province):
+                    @Html.DropDownListFor(m => m.Province, new List<SelectListItem>(), new { @class = "form-control" })
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.City):
+                    @Html.DropDownListFor(m => m.City, new List<SelectListItem>(), new { @class = "form-control" })
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.Region):
+                    @Html.DropDownListFor(m => m.Region, new List<SelectListItem>(), new { @class = "form-control" })
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.RecordState):
+                    @Html.DropDownListFor(m => m.RecordState, states, new { @class = "form-control" })
+                </div>
+                <div class="form-group">
+                    <div class="input-group">
+                        @Html.TextBoxFor(m => m.QueryText, new { @class = "form-control", placeholder = "请输入内容相关信息" })
+                        <span class="input-group-btn">
+                            <a id="btnQuery" href="javascript:;" class="btn btn-primary" ng-click="getList()">搜  索</a>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <div class="row">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th class="col-md-1">
+                            <span class="line"></span>
+                            @Html.DisplayNameFor(m => m.Name)
+                        </th>
+                        <th class="col-md-1">
+                            <span class="line"></span>
+                            提交商户
+                        </th>
+                        <th class="col-md-1">
+                            <span class="line"></span>
+                            @Html.DisplayNameFor(m => m.Province)
+                        </th>
+                        <th class="col-md-1">
+                            <span class="line"></span>
+                            @Html.DisplayNameFor(m => m.City)
+                        </th>
+                        <th class="col-md-1">
+                            <span class="line"></span>
+                            @Html.DisplayNameFor(m => m.Region)
+                        </th>
+                        <th class="col-md-1">
+                            <span class="line"></span>
+                            @Html.DisplayNameFor(m => m.OpenAreas)
+                        </th>
+                        <th class="col-md-1">
+                            <span class="line"></span>
+                            @Html.DisplayNameFor(m => m.PlayCount)
+                        </th>
+                        <th class="col-md-1">
+                            <span class="line"></span>
+                            @Html.DisplayNameFor(m => m.BeginPlayDate)
+                        </th>
+                        <th class="col-md-1">
+                            <span class="line"></span>
+                            @Html.DisplayNameFor(m => m.EndPlayDate)
+                        </th>
+                        <th class="col-md-1">
+                            <span class="line"></span>
+                            @Html.DisplayNameFor(m => m.PlayTimes)
+                        </th>
+                        <th class="col-md-1">
+                            <span class="line"></span>
+                            @Html.DisplayNameFor(m => m.RecordState)
+                        </th>
+                        <th class="col-md-1">
+                            <span class="line"></span>
+                            操作
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="c in List">
+                        <td ng-bind="c.Name"></td>
+                        <td ng-bind="c.Merchant.Name"></td>
+                        <td ng-bind="c.Province  |areaFilter"></td>
+                        <td ng-bind="c.Province  |areaFilter:c.City"></td>
+                        <td ng-bind="c.Province  |areaFilter:c.City:c.Region"></td>
+                        <td ng-bind="c.OpenAreaDisplay"></td>
+                        <td ng-bind="c.PlayCount"></td>
+                        <td ng-bind="c.BeginPlayDate"></td>
+                        <td ng-bind="c.EndPlayDate"></td>
+                        <td>
+                            <div ng-bind="c.PlayTimeDisplay |playTimeFilter" data-toggle="popover" data-trigger="hover" title="播放时段" data-content="{{c.PlayTimeDisplay.replaceAll('，','<br>')}}">
+                            </div>
+                        </td>
+                        <td ng-bind="c.RecordStateDisplay"></td>
+                        <td>
+                            <ul class="actions">
+                                @if (User.Identity.CheckActionRight("0301", ActionTypes.Auditing))
+                                {
+                                    <li ng-hide="">
+                                        <a ng-click="check(c.ID)" href="javascript:;" ng-bind="c.RecordState===1?'审核':'详情'"></a>
+                                    </li>
+                                }
+                                else
+                                {
+                                    <li>
+                                        <a href="javascript:;" ng-click="check(c.ID)">详情</a>
+                                    </li>
+                                }
+                                @if (User.Identity.CheckActionRight("0301", ActionTypes.Update))
+                                {
+                                    <li ng-show="c.RecordState===1">
+                                        <a href="/adList/update?aId={{c.ID}}&mId={{c.MerchantID}}&ref=/adList/index">修改</a>
+                                    </li>
+                                }
+
+                            </ul>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            @Html.Partial("_PaginationPartial")
+        </div>
+    </div>
+    <div class="modal fade" id="checkModal" tabindex="-1" role="dialog" aria-labelledby="checkModal" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">内容审核</h4>
+                </div>
+                <div class="modal-body">
+                    <form role="form" method="post" class="form-horizontal" id="checkForm" action="/adList/check">
+                        <input type="hidden" name="ID" value="{{Ad.ID}}" />
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">@Html.DisplayNameFor(m => m.Name)：</label>
+                            <div class="col-sm-7">
+                                <p class="form-control-static">{{Ad.Name}}</p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">审核状态：</label>
+                            <div class="col-sm-7">
+                                <label class="radio-inline">
+                                    <input type="radio" name="RecordState" checked value="2" ng-click="radioClick($event)">审核通过
+                                </label>
+                                <label class="checkbox-inline">
+                                    <input type="radio" name="RecordState" value="3" ng-click="radioClick($event)">审核不通过
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group" ng-hide="RecordStates==2">
+                            <label class="col-sm-3 control-label">@Html.DisplayNameFor(m => m.RefusalReasons)：</label>
+                            <div class="col-sm-7">
+                                <textarea id="RefusalReasons" name="RefusalReasons" rows="4" cols="0" class="form-control"></textarea>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button id="btnCheck" type="button" class="btn btn-primary">保 存</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取 消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    @Html.Partial("_DetailAndAuditingPartial")
+</div>
+@section scripts{
+    @Scripts.Render("~/bundles/angular")
+    <script src="~/Scripts/jquery.area.js"></script>
+    <script src="~/Scripts/page/page.adList.js"></script>
+}

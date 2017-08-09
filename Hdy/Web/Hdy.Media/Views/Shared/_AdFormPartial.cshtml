@@ -1,0 +1,256 @@
+﻿@model AdvertisementModel
+<div id="pad-wrapper" class="new-user">
+    <div class="row header">
+        <div class="col-md-12">
+            <h3>@ViewBag.Title</h3>
+        </div>
+    </div>
+    <hr />
+    @if (!string.IsNullOrEmpty(Model.RefusalReasons))
+    {
+        <div class="row">
+            <div class="col-md-6">
+                <div class="alert alert-danger" role="alert">内容审核失败！原因是：@Model.RefusalReasons</div>
+            </div>
+        </div>
+    }
+    <div class="row form-wrapper">
+        <div class="col-md-6 with-sidebar">
+            <form id="createAdForm" class="form-horizontal" enctype="multipart/form-data" role="form" action="/adList/create">
+                @Html.HiddenFor(m => m.MerchantID)
+                @Html.HiddenFor(m => m.ID)
+                @Html.Hidden("RedirectUrls")
+                @Html.AntiForgeryToken()
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">
+                        @Html.DisplayNameFor(m => m.Name)<span class="hdy-red">*</span>
+                    </label>
+                    <div class="col-sm-8">
+                        @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.Name)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">
+                        @Html.DisplayNameFor(m => m.Province)<span class="hdy-red">*</span>
+                    </label>
+                    <div class="col-sm-8">
+                        @Html.DropDownListFor(m => m.Province, new List<SelectListItem>(), new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.Province)
+                        @Html.Hidden("hProvince", Model.Province)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">
+                        @Html.DisplayNameFor(m => m.City)<span class="hdy-red">*</span>
+                    </label>
+                    <div class="col-sm-8">
+                        @Html.DropDownListFor(m => m.City, new List<SelectListItem>(), new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.City)
+                        @Html.Hidden("hCity", Model.City)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">
+                        @Html.DisplayNameFor(m => m.Region)<span class="hdy-red">*</span>
+                    </label>
+                    <div class="col-sm-8">
+                        @Html.DropDownListFor(m => m.Region, new List<SelectListItem>(), new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.Region)
+                        @Html.Hidden("hRegion", Model.Region)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">
+                        @Html.DisplayNameFor(m => m.OpenAreas)<span class="hdy-red">*</span>
+                    </label>
+                    <div class="col-sm-8" id="openAreaContainer">
+                        请选择省市区后查看数据
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">
+                        @Html.DisplayNameFor(m => m.PlayCount)<span class="hdy-red">*</span>
+                    </label>
+                    <div class="col-sm-6">
+                        @Html.TextBoxFor(m => m.PlayCount, new { @class = "form-control", type = "number", min = 1, @Value = 3 })
+                        @Html.ValidationMessageFor(m => m.PlayCount)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">
+                        @Html.DisplayNameFor(m => m.BeginPlayDate)<span class="hdy-red">*</span>
+                    </label>
+                    <div class="col-sm-4">
+                        @Html.TextBoxFor(m => m.BeginPlayDate, new { @class = "form-control", placeholder = "开始播放日期", @readonly = true, data_date_format = "yyyy-mm-dd" })
+                        @Html.ValidationMessageFor(m => m.BeginPlayDate)
+                    </div>
+                    <div class="col-sm-4">
+                        @Html.TextBoxFor(m => m.EndPlayDate, new { @class = "form-control", placeholder = "结束播放日期", @readonly = true, data_date_format = "yyyy-mm-dd" })
+                        @Html.ValidationMessageFor(m => m.EndPlayDate)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">
+                        @Html.DisplayNameFor(m => m.PlayTimes)<span class="hdy-red">*</span>
+                    </label>
+                    <div class="col-sm-8" id="playTimesContainer">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">
+                        上传文件<span class="hdy-red">*</span>
+                    </label>
+                    <div class="col-sm-8" id="fileContainer">
+                        @*<input type="file" id="file" name="file" class="form-control" multiple />
+                            <div id="fileContainer">
+                            </div>*@
+                        <span class="btn btn-success fileinput-button">
+                            <i class="glyphicon glyphicon-plus"></i>
+                            <span>选择文件</span>
+                            <input id="file" type="file" name="files[]" multiple>
+                        </span>
+                        <a href="javascript:;" class="start" id="btnStartUpload">
+                        </a>
+                        <table role="presentation" class="table">
+                            <tbody class="files"></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">
+                        @Html.DisplayNameFor(m => m.Remark)
+                    </label>
+                    <div class="col-sm-8">
+                        @Html.TextAreaFor(m => m.Remark, 4, 0, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-8 text-center">
+                        <a id="btnCreateAd" class="btn btn-primary" href="javascript:;">
+                            <span class="glyphicon glyphicon-floppy-disk"></span>
+                            保 存
+                        </a>
+                        &nbsp;&nbsp;
+                        <a class="btn btn-default" href="@Request.QueryString["ref"]?isCancel=true">
+                            <i class="icon-reply"></i>
+                            @(string.IsNullOrEmpty(Model.ID) ? "返 回" : "取 消")
+                        </a>
+                    </div>
+                </div>
+            </form>
+            @Html.Hidden("OpenAreaValues", Model.OpenAreas)
+            @Html.Hidden("PlayTimeValues", Model.PlayTimes)
+        </div>
+        <div class="col-md-3 form-sidebar pull-left">
+            <div class="alert alert-info">
+                <i class="icon-exclamation-sign pull-left"></i>
+                可提交图片，视频类型的内容，最大支持选择5个文件上传。
+                如果广告内容为文字，请把文字填在“文本内容”里面。
+            </div>
+            <div class="alert alert-info hidden-tablet">
+                <i class="icon-lightbulb pull-left"></i>
+                图片分辨率上限：1920*1080，文件大小上限：2M，
+                支持图片文件类型：jpg/jpeg/gif/png
+            </div>
+            <div class="alert alert-info hidden-tablet">
+                <i class="icon-lightbulb pull-left"></i>
+                视频尺寸格式要求：1080P及以下，文件大小上限：200M，
+                支持文件类型：mp4/mpeg/mpg/avi/wmv/flv
+            </div>
+        </div>
+    </div>
+</div>
+<!--上传模板-->
+<script id="template-upload" type="text/x-tmpl">
+    {% for (var i=0, file; file=o.files[i]; i++) { %}
+    <tr class="template-upload fade">
+        <td>
+            <div class="media">
+                <div class="media-left">
+                    <a href="javascript:;">
+                        <span class="preview"></span>
+                    </a>
+                </div>
+                <div class="media-body">
+                    <h4 class="media-heading name">
+                        {% if (file.name.length<=10) { %}
+                        {%=file.name%}
+                        {% }%}
+
+                        {% if (file.name.length>10) { %}
+                        {%=file.name.substring(file.name.length-14)%}
+                        {%}%}
+                        <small class="size">Processing...</small>
+                    </h4>
+                    <strong class="error text-danger"></strong>
+                    <input type="text" id="{%=file.name %}" name="{%=file.name %}" class="form-control input-sm" placeholder="请输入跳转链接，如:http://baidu.com" />
+                    <span class="field-validation-valid" data-valmsg-for="{%=file.name %}" data-valmsg-replace="true"></span>
+                    <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                        <div class="progress-bar progress-bar-success" style="width:0%;"></div>
+                    </div>
+                </div>
+                <div class="media-right">
+                    {% if (!i && !o.options.autoUpload) { %}
+                    <button class="btn btn-primary start hidden" disabled>
+                        <i class="glyphicon glyphicon-upload"></i>
+                        <span>上传</span>
+                    </button>
+                    {% } %}
+                    {% if (!i) { %}
+                    <button class="btn btn-warning cancel">
+                        <i class="glyphicon glyphicon-ban-circle"></i>
+                        <span>取消</span>
+                    </button>
+                    {% } %}
+                </div>
+            </div>
+        </td>
+    </tr>
+    {% } %}
+</script>
+<script id="template-download" type="text/x-tmpl">
+    {% for (var i=0, file; file=o.files[i]; i++) { %}
+    <tr class="template-download fade">
+        <td>
+            <div class="media">
+                <div class="media-left">
+                    <span class="preview">
+                        {% if (file.thumbnailUrl) { %}
+                        <a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" data-gallery><img src="{%=file.thumbnailUrl%}"></a>
+                        {% } %}
+                    </span>
+                </div>
+                <div class="media-body">
+                    <h4 class="media-heading name">
+                        {% if (file.url) { %}
+                        <a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" {%=file.thumbnailUrl?'data-gallery':''%}>{%=file.name%}</a>
+                        {% } else { %}
+                        <span>{%=file.name%}</span>
+                        {% } %}
+                        <small class="size">{%=o.formatFileSize(file.size)%}</small>
+                    </h4>
+                    {% if (file.error) { %}
+                    <div><span class="label label-danger">Error</span> {%=file.error%}</div>
+                    {% } %}
+                    <input type="text" id="{%=file.name %}" name="{%=file.name %}" value="{%=file.redirectUrl%}" class="form-control input-sm" placeholder="请输入跳转链接，如:http://baidu.com" />
+                    <span class="field-validation-valid" data-valmsg-for="{%=file.name %}" data-valmsg-replace="true"></span>
+                </div>
+                <div class="media-right">
+                    {% if (file.deleteUrl) { %}
+                    <button class="btn btn-danger delete" data-type="{%=file.deleteType%}" data-url="{%=file.deleteUrl%}" {% if (file.deletewithcredentials) { %} data-xhr-fields='{"withCredentials":true}' {% } %}>
+                        <i class="glyphicon glyphicon-trash"></i>
+                        <span>删除</span>
+                    </button>
+                    {% } else { %}
+                    <button class="btn btn-warning cancel">
+                        <i class="glyphicon glyphicon-ban-circle"></i>
+                        <span>取消</span>
+                    </button>
+                    {% } %}
+                </div>
+            </div>
+        </td>
+    </tr>
+    {% } %}
+</script>

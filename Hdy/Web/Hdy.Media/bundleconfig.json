@@ -1,0 +1,146 @@
+[
+  {
+    "outputFileName": "Scripts/angular-ui/ui-bootstrap-tpls.min.js",
+    "inputFiles": [
+      "Scripts/angular-ui/ui-bootstrap-tpls.js"
+    ]
+  },
+  {
+    "outputFileName": "Scripts/plugins/ajaxbtn.min.js",
+    "inputFiles": [
+      "Scripts/plugins/ajaxbtn.js"
+    ]
+  },
+  {
+    "outputFileName": "Scripts/plugins/common.min.js",
+    "inputFiles": [
+      "Scripts/plugins/common.js"
+    ]
+  },
+  {
+    "outputFileName": "Scripts/page/page.auth.min.js",
+    "inputFiles": [
+      "Scripts/page/page.auth.js"
+    ]
+  },
+  {
+    "outputFileName": "Scripts/page/page.ad.dlrecord.min.js",
+    "inputFiles": [
+      "Scripts/page/page.ad.dlrecord.js"
+    ]
+  },
+  {
+    "outputFileName": "Scripts/page/page.ad.scheduling.min.js",
+    "inputFiles": [
+      "Scripts/page/page.ad.scheduling.js"
+    ]
+  },
+  {
+    "outputFileName": "Scripts/plugins/fileupload.min.js",
+    "inputFiles": [
+      "Scripts/plugins/fileupload.js"
+    ]
+  },
+  {
+    "outputFileName": "Scripts/angular-ui/ui-bootstrap-tpls-2.3.1.min.js",
+    "inputFiles": [
+      "Scripts/angular-ui/ui-bootstrap-tpls-2.3.1.js"
+    ]
+  },
+  {
+    "outputFileName": "Scripts/page/page.adScheduling.min.js",
+    "inputFiles": [
+      "Scripts/page/page.adScheduling.js"
+    ]
+  },
+  {
+    "outputFileName": "Scripts/page/page.adList.min.js",
+    "inputFiles": [
+      "Scripts/page/page.adList.js"
+    ]
+  },
+  {
+    "outputFileName": "Scripts/page/page.ad.create.min.js",
+    "inputFiles": [
+      "Scripts/page/page.ad.create.js"
+    ]
+  },
+  {
+    "outputFileName": "Scripts/page/common.min.js",
+    "inputFiles": [
+      "Scripts/page/common.js"
+    ]
+  },
+  {
+    "outputFileName": "Scripts/page/layoutTab.min.js",
+    "inputFiles": [
+      "Scripts/page/layoutTab.js"
+    ]
+  },
+  {
+    "outputFileName": "Scripts/page/page.corpInfo.min.js",
+    "inputFiles": [
+      "Scripts/page/page.corpInfo.js"
+    ]
+  },
+  {
+    "outputFileName": "Scripts/page/page.corpList.min.js",
+    "inputFiles": [
+      "Scripts/page/page.corpList.js"
+    ]
+  },
+  {
+    "outputFileName": "Scripts/page/page.device.min.js",
+    "inputFiles": [
+      "Scripts/page/page.device.js"
+    ]
+  },
+  {
+    "outputFileName": "Scripts/page/page.deviceCategory.min.js",
+    "inputFiles": [
+      "Scripts/page/page.deviceCategory.js"
+    ]
+  },
+  {
+    "outputFileName": "Scripts/page/page.corpAd.min.js",
+    "inputFiles": [
+      "Scripts/page/page.corpAd.js"
+    ]
+  },
+  {
+    "outputFileName": "Scripts/page/page.openarea.min.js",
+    "inputFiles": [
+      "Scripts/page/page.openarea.js"
+    ]
+  },
+  {
+    "outputFileName": "Scripts/page/page.right.min.js",
+    "inputFiles": [
+      "Scripts/page/page.right.js"
+    ]
+  },
+  {
+    "outputFileName": "Scripts/page/page.role.min.js",
+    "inputFiles": [
+      "Scripts/page/page.role.js"
+    ]
+  },
+  {
+    "outputFileName": "Scripts/page/page.user.min.js",
+    "inputFiles": [
+      "Scripts/page/page.user.js"
+    ]
+  },
+  {
+    "outputFileName": "Scripts/page/partial.AdDetail.min.js",
+    "inputFiles": [
+      "Scripts/page/partial.AdDetail.js"
+    ]
+  },
+  {
+    "outputFileName": "Scripts/page/page.adCreate.min.js",
+    "inputFiles": [
+      "Scripts/page/page.adCreate.js"
+    ]
+  }
+]

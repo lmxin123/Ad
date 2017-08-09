@@ -1,0 +1,47 @@
+﻿<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>海迪云- @ViewBag.Title</title>
+    <link rel="stylesheet" href="~/Content/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/Content/bootstrap-overrides.css" />
+    <link rel="stylesheet" href="~/Content/font-awesome.css" />
+    <link rel="stylesheet" href="~/Content/layout.css" />
+    <link rel="stylesheet" href="~/Content/icons.css" />
+    <link rel="stylesheet" href="~/Content/assets/css/frame.min.css" />
+    <link rel="stylesheet" href="~/Content/Site.css" />
+    @RenderSection("styles", required: false)
+    @Scripts.Render("~/bundles/modernizr")
+</head>
+<body style="background-color: #f7f7f7;">
+    @{
+        var url = Html.ViewContext.HttpContext.Request.Url.AbsolutePath.ToLower();
+    }
+    @if (!url.Contains("login") && User.Identity.IsAuthenticated)
+    {
+        Html.RenderPartial("_PanelPartial");
+        <div class="content" id="masterContent">
+            <div role="tabpanel" style="margin:60px auto auto 3px;">
+                <ul class="nav nav-tabs" role="tablist" id="myTab">
+                </ul>
+                <div class="tab-content">
+                </div>
+            </div>
+        </div>
+    }
+
+    @RenderBody()
+    <!--加载提示-->
+    <div class="text-center hidden" id="loading">
+        <img src="~/content/assets/img/loading.gif"><br /><span>正在加载...</span><br />
+    </div>
+    @Scripts.Render("~/bundles/common")
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    @Html.Partial("_ValidationScriptsPartial")
+    <script src="~/Scripts/page/layout.tab.js"></script>
+    <script src="~/Scripts/plugins/ajaxbtn.js"></script>
+    <script src="~/Scripts/page/page.auth.js"></script>
+</body>
+</html>

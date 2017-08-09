@@ -1,0 +1,8 @@
+﻿@model IEnumerable<OpenAreaSelectorViewModel>
+@foreach (var item in Model)
+{
+    <label class="checkbox-inline">
+        <input type="checkbox" name="OpenArea" @item.Checked value="@item.Value">@item.Name
+    </label>
+}
+

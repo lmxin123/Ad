@@ -1,0 +1,15 @@
+﻿@using Framework.Common.Extensions;
+@model CorpModel
+@{
+    Layout = "~/Views/Shared/_LayoutTab.cshtml";
+}
+@section styles{
+    <link href="~/Content/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+    @Styles.Render("~/Content/jQuery-File-Upload")
+}
+@Html.Partial("_CorpFormPartial", Model)
+@section scripts{
+    <script src="~/Scripts/jquery.area.js"></script>
+    <script src="~/Scripts/plugins/fileupload.js"></script>
+    <script src="~/Scripts/page/page.corpInfo.js"></script>
+}

@@ -1,0 +1,229 @@
+﻿@{
+    Layout = "~/Views/Shared/_LayoutTab.cshtml";
+    ViewBag.Title = "内容排期";
+    DateTime now = DateTime.Now;
+}
+@section styles{
+    <link href="~/Content/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+    <style>
+        .selected {
+            background-color: dodgerblue;
+        }
+
+        caption {
+            font-size: larger;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .expire {
+            background-color: lightgrey;
+            cursor: no-drop;
+        }
+
+        .device-container {
+            height: 300px;
+            overflow-y: auto;
+        }
+
+        td[data-deviceid] {
+            cursor: pointer;
+        }
+    </style>
+}
+@model SchedulingQueryViewModel
+<div id="pad-wrapper" ng-app="schedulingApp" ng-controller="SchedulingCtrl">
+    <div class="table-wrapper products-table section">
+        <form id="queryForm" class="form-inline">
+            <div class="row filter-block">
+                <div class="form-group">
+                    @Html.LabelFor(m => m.Province)：
+                    @Html.DropDownListFor(m => m.Province, new List<SelectListItem>(), new { @class = "form-control" })
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.City):
+                    @Html.DropDownListFor(m => m.City, new List<SelectListItem>(), new { @class = "form-control" })
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.Region):
+                    @Html.DropDownListFor(m => m.Region, new List<SelectListItem>(), new { @class = "form-control" })
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.OpenArea):
+                    @Html.DropDownListFor(m => m.OpenArea, new List<SelectListItem>(), new { @class = "form-control" })
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.PlayMonth):
+                    @Html.TextBoxFor(m => m.PlayMonth, new { @class = "form-control", @Value = now.ToString("yyyy-MM"), ng_model = "month", placeholder = "排期月份", @readonly = true, data_date_format = "yyyy-mm" })
+                </div>
+                <div class="form-group">
+                    <a href="javascript:;" class="btn btn-primary" ng-click="getList()">
+                        <span class="glyphicon glyphicon-search"></span>
+                        搜  索
+                    </a>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="row">
+        <table class="table table-bordered">
+            <caption>
+                <div class="btn-toolbar">
+                    <div class="btn-group pull-left" data-toggle="buttons">
+                        <label class="btn btn-default" ng-click="toolBarChange(-1)">
+                            <input type="radio" name="month"> 上一月
+                        </label>
+                        <label class="btn btn-default active" ng-click="toolBarChange(0)">
+                            <input type="radio" name="month"> 本月
+                        </label>
+                        <label class="btn btn-default" ng-click="toolBarChange(1)">
+                            <input type="radio" name="month">下一月
+                        </label>
+                    </div>
+                    @if (User.Identity.CheckActionRight("0302", ActionTypes.Create))
+                    {
+                        <div class="btn-group pull-left">
+                            <button class="btn btn-default" data-toggle="modal" data-target="#copyModal">排期复制</button>
+                        </div>
+                    }
+                    <span ng-bind="month"></span>月份排期表
+                </div>
+            </caption>
+            <thead>
+                <tr>
+                    <th>终端名称</th>
+                    <th ng-repeat="d in DateList" ng-bind="d.date.day+d.week"></th>
+                </tr>
+            </thead>
+            <tbody id="schedulingContainer">
+                <tr ng-repeat="c in List" data-deviceid="{{c.Scheduling.ID}}">
+                    @if (User.Identity.CheckActionRight("0302", ActionTypes.Create))
+                    {
+                        <td data-deviceid="{{c.DeviceId}}" ng-bind="c.DevieName" ng-click="copyThisDevice(c.DeviceId)" title="点击可复制此终端排期"></td>
+                        <td data-date="{{d.date.date}}"
+                            data-sid="{{s.sid}}"
+                            ng-repeat="d in DateList"
+                            ng-class="s.selected"
+                            ng-init="s=tdInit(d.date.date,c.Schedulings)"
+                            ng-mousedown="down($event)"
+                            ng-mousemove="move($event)"
+                            ng-mouseup="up($event)"></td>
+                    }
+                    else
+                    {
+                        <td data-deviceid="{{c.DeviceId}}" ng-bind="c.DevieName" title="点击可复制此终端排期"></td>
+                        <td data-date="{{d.date.date}}"
+                            data-sid="{{s.sid}}"
+                            ng-repeat="d in DateList"
+                            ng-class="s.selected"
+                            ng-init="s=tdInit(d.date.date,c.Schedulings)"></td>
+                    }
+                </tr>
+            </tbody>
+        </table>
+        @Html.Partial("_PaginationPartial")
+    </div>
+    @Html.Partial("_CreatePartial")
+    <div class="modal fade" id="copyModal" tabindex="-1" role="dialog" aria-labelledby="copyModal" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">复制排期</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-5">
+                            <div class="panel panel-info">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">选择被复制终端</h3>
+                                </div>
+                                <div class="panel-body">
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <input class="form-control" placeholder="请输入内容相关信息" ng-model="queryTxtLeft" />
+                                            <span class="input-group-btn">
+                                                <a href="javascript:;" class="btn btn-default" ng-click="getDeviceLeft()">搜  索</a>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="row device-container">
+                                        <ul class="list-unstyled" id="accordion">
+                                            <li class="panel" ng-repeat="left in DeviceListLeft">
+                                                <label>
+                                                    <input type="radio" name="deviceLeft" value="{{left.ID}}" checked={{DeviceListLeft.length===1}}>
+                                                    {{left.Name}}
+                                                </label>
+                                                <a href="#{{left.ID}}" class="pull-right" data-toggle="collapse" data-parent="#accordion" aria-expanded="false" aria-controls="{{left.ID}}" title="点击查询排期列表" ng-click="getScheduling(left.ID,$event)">展开排期</a>
+                                                <div id="{{left.ID}}" class="collapse" role="tabpanel" aria-labelledby="{{left.ID}}">
+                                                    <ul style="list-style:none">
+                                                        <li ng-repeat="s in SchedulingList">
+                                                            <div class="checkbox">
+                                                                <label data-toggle="popover">
+                                                                    <input type="checkbox" value="{{s.ID}}" checked>
+                                                                    {{s.Name}}
+                                                                </label>
+                                                                <div class="popover-content hidden small text-sm">
+                                                                    <h6>
+                                                                        开始时间:{{s.BeginPlayDate}}<br>
+                                                                        结束时间:{{s.EndPlayDate}}<br>
+                                                                        播放次数:{{s.PlayCount}}<br>
+                                                                        播放时段:{{s.PlayTimeDisplay}}
+                                                                    </h6>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-2" style="margin-top:24%">
+                            <div class="row">
+                                <button class="btn btn-primary" ng-click="copyTo()">复制到>></button>
+                            </div>
+                            <div class="row">
+                                <button class="btn btn-danger" ng-click="cancelCopy()" ng-show="CancelCopyIds.length>0">撤消复制</button>
+                            </div>
+                        </div>
+                        <div class="col-sm-5">
+                            <div class="panel panel-info">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">选择目标终端</h3>
+                                </div>
+                                <div class="panel-body">
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <input class="form-control" ng-model="queryTxtRight" placeholder="请输入内容相关信息" />
+                                            <span class="input-group-btn">
+                                                <a href="javascript:;" class="btn btn-default" ng-click="getDeviceRight()">搜  索</a>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="row device-container">
+                                        <div class="checkbox" ng-repeat="right in DeviceListRight">
+                                            <label>
+                                                <input type="checkbox" name="deviceRight" value="{{right.ID}}">
+                                                {{right.Name}}
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts{
+    @Scripts.Render("~/bundles/angular")
+    <script src="~/Scripts/jquery.area.js"></script>
+    <script src="~/Scripts/bootstrap-datetimepicker.min.js"></script>
+    <script src="~/Scripts/bootstrap-datetimepicker.zh-CN.js"></script>
+    <script src="~/Scripts/page/page.adScheduling.js"></script>
+}

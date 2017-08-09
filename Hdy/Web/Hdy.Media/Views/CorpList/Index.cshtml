@@ -1,0 +1,328 @@
+﻿@model MerchantQueryViewModel
+@{
+    ViewBag.Title = "商户列表";
+    Layout = "~/Views/Shared/_LayoutTab.cshtml";
+}
+@section styles{
+    <link href="~/content/tables.css" type="text/css" rel="stylesheet" />
+    <style>
+        .table-wrapper .table ul.actions {
+            float: none;
+        }
+
+        .table-wrapper, .table-wrapper .filter-block {
+            margin-bottom: 15px;
+            margin-top: 15px;
+        }
+
+        hr {
+            margin-top: 0;
+            margin-bottom: 0;
+            border: 0;
+            border-top: 1px solid #eee;
+        }
+
+        @@media (min-width: 768px) .form-horizontal .control-label {
+            padding-top: 0; margin-bottom: 0; text-align: right;
+        }
+    </style>
+}
+
+<div id="pad-wrapper" ng-app="merchantListApp" ng-controller="MerchantListCtrl">
+    <div class="table-wrapper products-table section">
+        <form id="queryForm" class="form-inline">
+            <div class="row filter-block">
+                <div class="form-group">
+                    @Html.LabelFor(m => m.Province):
+                    @Html.DropDownListFor(m => m.Province, new List<SelectListItem>(), new { @class = "form-control" })
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.City):
+                    @Html.DropDownListFor(m => m.City, new List<SelectListItem>(), new { @class = "form-control" })
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.Region):
+                    @Html.DropDownListFor(m => m.Region, new List<SelectListItem>(), new { @class = "form-control" })
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.MerchantType)：
+                    @Html.EnumDropDownListFor(m => m.MerchantType, new { @class = "form-control" })
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.LegalPersonCertificateType):
+                    @Html.EnumDropDownListFor(m => m.LegalPersonCertificateType, new { @class = "form-control" })
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.RecordState):
+                    @Html.EnumDropDownListFor(m => m.RecordState, new { @class = "form-control" })
+                </div>
+                @if (User.Identity.CheckActionRight("0202", ActionTypes.Create))
+                {
+                    <div class="form-group">
+                        <a class="btn btn-primary" href="/corpList/create?ref=/corpList/index">
+                            <i class="icon-plus"></i>
+                            添加商户
+                        </a>
+                    </div>
+                }
+            </div>
+            <div class="row filter-block">
+                <div class="input-group col-md-4">
+                    @Html.TextBoxFor(m => m.QueryText, new { @class = "form-control", placeholder = "请输入商户相关信息" })
+                    <span class="input-group-btn">
+                        <a href="javascript:;" class="btn btn-primary" ng-click="getList()">
+                            <span class="glyphicon glyphicon-search"></span>
+                            搜  索
+                        </a>
+                    </span>
+                </div>
+            </div>
+        </form>
+        <div class="row">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th width="150">
+                            <span class="line"></span>
+                            @Html.DisplayNameFor(m => m.Name)
+                        </th>
+                        <th width="150">
+                            <span class="line"></span>
+                            @Html.DisplayNameFor(m => m.MerchantType)
+                        </th>
+                        <th width="100">
+                            <span class="line"></span>
+                            @Html.DisplayNameFor(m => m.Province)
+                        </th>
+                        <th width="100">
+                            <span class="line"></span>
+                            @Html.DisplayNameFor(m => m.City)
+                        </th>
+                        <th width="100">
+                            <span class="line"></span>
+                            @Html.DisplayNameFor(m => m.Region)
+                        </th>
+                        <th width="200">
+                            <span class="line"></span>
+                            @Html.DisplayNameFor(m => m.Address)
+                        </th>
+                        <th width="100">
+                            <span class="line"></span>
+                            @Html.DisplayNameFor(m => m.Contact)
+                        </th>
+                        <th width="150">
+                            <span class="line"></span>
+                            @Html.DisplayNameFor(m => m.Phone)
+                        </th>
+                        <th width="100">
+                            <span class="line"></span>
+                            @Html.DisplayNameFor(m => m.LegalPerson)
+                        </th>
+                        <th width="200">
+                            <span class="line"></span>
+                            @Html.DisplayNameFor(m => m.RecordState)
+                        </th>
+                        <th>
+                            <span class="line"></span>
+                            操作
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="c in List">
+                        <td ng-bind="c.Name"></td>
+                        <td ng-bind="c.MerchantTypeDisplay"></td>
+                        <td ng-bind="c.Province  |areaFilter"></td>
+                        <td ng-bind="c.Province  |areaFilter:c.City"></td>
+                        <td ng-bind="c.Province  |areaFilter:c.City:c.Region"></td>
+                        <td ng-bind="c.Address"></td>
+                        <td ng-bind="c.Contact"></td>
+                        <td ng-bind="c.Phone"></td>
+                        <td ng-bind="c.LegalPerson"></td>
+                        <td ng-bind="c.RecordStateDisplay"></td>
+                        <td>
+                            <ul class="actions">
+                                <li>
+                                    <a href="javascript:;" ng-click="detailModal(c.ID)">详情</a>
+                                </li>
+                                @if (User.Identity.CheckActionRight("0202", ActionTypes.Update))
+                                {
+                                    <li ng-hide="c.RecordState==2">
+                                        <a href="/corpList/update?id={{c.ID}}&ref=/corpList/index">修改</a>
+                                    </li>
+                                }
+                                @if (User.Identity.CheckActionRight("0202", ActionTypes.Auditing))
+                                {
+                                    <li ng-hide="c.RecordState!=1">
+                                        <a ng-click="check(c.ID)" href="javascript:;">审核</a>
+                                    </li>
+                                }
+                                @if (User.Identity.CheckActionRight("0301", ActionTypes.Create))
+                                {
+                                    <li ng-show="c.RecordState==2">
+                                        <a href="/adList/create?mId={{c.ID}}&ref=/corpList/index">提交内容</a>
+                                    </li>
+                                }
+                            </ul>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            @Html.Partial("_PaginationPartial")
+        </div>
+    </div>
+
+    <div class="modal fade" id="detailModal" tabindex="-1" role="dialog" aria-labelledby="detailModal" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">商户详细信息</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-danger" role="alert" ng-hide="merchant.RefusalReasons==null">商户资料审核失败！原因是：{{merchant.RefusalReasons}}</div>
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">@Html.DisplayNameFor(m => m.Name)：</label>
+                            <div class="col-sm-4">
+                                <p class="form-control-static">{{merchant.Name}}</p>
+                            </div>
+                            <label class="col-sm-2 control-label">@Html.DisplayNameFor(m => m.MerchantType)：</label>
+                            <div class="col-sm-4">
+                                <p class="form-control-static">{{merchant.MerchantTypeDisplay}}</p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">@Html.DisplayNameFor(m => m.Address)：</label>
+                            <div class="col-sm-4">
+                                <p class="form-control-static"> {{ merchant.AddressDisplay }}</p>
+                            </div>
+                            <label class="col-sm-2 control-label">@Html.DisplayNameFor(m => m.PostCode)：</label>
+                            <div class="col-sm-4">
+                                <p class="form-control-static">{{merchant.PostCode }}</p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">@Html.DisplayNameFor(m => m.Contact)：</label>
+                            <div class="col-sm-4">
+                                <p class="form-control-static">  {{merchant.Contact}}</p>
+                            </div>
+                            <label class="col-sm-2 control-label">@Html.DisplayNameFor(m => m.Phone)：</label>
+                            <div class="col-sm-4">
+                                <p class="form-control-static">{{merchant.Phone }}</p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">@Html.DisplayNameFor(m => m.Fax)：</label>
+                            <div class="col-sm-4">
+                                <p class="form-control-static">   {{merchant.Fax}}</p>
+                            </div>
+                            <label class="col-sm-2 control-label">@Html.DisplayNameFor(m => m.Email)：</label>
+                            <div class="col-sm-4">
+                                <p class="form-control-static">{{merchant.Email }}</p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">@Html.DisplayNameFor(m => m.LegalPerson)：</label>
+                            <div class="col-sm-4">
+                                <p class="form-control-static">{{merchant.LegalPerson}}</p>
+                            </div>
+                            <label class="col-sm-2 control-label">@Html.DisplayNameFor(m => m.LegalPersonCertificateType)：</label>
+                            <div class="col-sm-4">
+                                <p class="form-control-static">{{merchant.LegalPersonCertificateTypeDisplay }}</p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">@Html.DisplayNameFor(m => m.LegalPersonIdentityNo)：</label>
+                            <div class="col-sm-4">
+                                <p class="form-control-static">{{merchant.LegalPersonIdentityNo}}</p>
+                            </div>
+                            <label class="col-sm-2 control-label">@Html.DisplayNameFor(m => m.BusinessLicenseNo)：</label>
+                            <div class="col-sm-4">
+                                <p class="form-control-static">{{merchant.BusinessLicenseNo }}</p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">@Html.DisplayNameFor(m => m.TaxRegistrationNo)：</label>
+                            <div class="col-sm-4">
+                                <p class="form-control-static">{{merchant.TaxRegistrationNo}}</p>
+                            </div>
+                            <label class="col-sm-2 control-label">@Html.DisplayNameFor(m => m.RegisteredAddress)：</label>
+                            <div class="col-sm-4">
+                                <p class="form-control-static">{{merchant.RegisteredAddress }}</p>
+                            </div>
+                        </div>
+                        <hr />
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">@Html.DisplayNameFor(m => m.BusinessLicensePath)：</label>
+                            <div class="col-sm-10">
+                                <p class="form-control-static" id="bLContainer">
+                                    未上传文件
+                                </p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">@Html.DisplayNameFor(m => m.BusinessScope)：</label>
+                            <div class="cols-sm-10">
+                                <p class="form-control-static">{{merchant.BusinessScope }}</p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">@Html.DisplayNameFor(m => m.Summary)：</label>
+                            <div class="col-sm-10">
+                                <p class="form-control-static">{{merchant.Summary }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="checkModal" tabindex="-1" role="dialog" aria-labelledby="checkModal" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">商户审核</h4>
+                </div>
+                <div class="modal-body">
+                    <form role="form" method="post" class="form-horizontal" id="checkForm" action="/corpList/Check">
+                        <input type="hidden" name="ID" value="{{merchant.ID}}" />
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">@Html.DisplayNameFor(m => m.Name)：</label>
+                            <div class="col-sm-7">
+                                <p class="form-control-static">{{merchant.Name}}</p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">审核状态：</label>
+                            <div class="col-sm-7">
+                                <label class="radio-inline">
+                                    <input type="radio" name="RecordState" checked value="2" ng-click="radioClick($event)">审核通过
+                                </label>
+                                <label class="checkbox-inline">
+                                    <input type="radio" name="RecordState" value="3" ng-click="radioClick($event)">审核不通过
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group" ng-hide="RecordStates==2">
+                            <label class="col-sm-3 control-label">@Html.DisplayNameFor(m => m.RefusalReasons)：</label>
+                            <div class="col-sm-7">
+                                <textarea id="RefusalReasons" name="RefusalReasons" rows="4" cols="0" class="form-control"></textarea>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button id="btnCheck" type="button" class="btn btn-primary">保 存</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取 消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts{
+    @Scripts.Render("~/bundles/angular")
+    <script src="~/Scripts/jquery.area.js"></script>
+    <script src="~/Scripts/page/page.corpList.js"></script>
+}

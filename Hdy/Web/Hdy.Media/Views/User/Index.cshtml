@@ -1,0 +1,135 @@
+﻿@using Framework.Auth;
+@{
+    Layout = "~/Views/Shared/_LayoutTab.cshtml";
+    ViewBag.Title = "用户管理";
+}
+@model UserQueryViewModel
+@section styles{
+    <link href="~/content/tables.css" type="text/css" rel="stylesheet" />
+
+    <style>
+        .table-wrapper .table ul.actions {
+            float: none;
+        }
+
+        .table-wrapper, .table-wrapper .filter-block {
+            margin-bottom: 15px;
+        }
+    </style>
+}
+<div id="pad-wrapper" ng-app="userApp" ng-controller="UserCtrl">
+    <div class="table-wrapper products-table section">
+        <form id="queryForm" class="form-inline">
+            <div class="row filter-block">
+                <div class="form-group">
+                    <label>角色：</label>
+                    @Html.DropDownListFor(m => m.RoleId, (List<SelectListItem>)ViewBag.RoleId, "请选择角色", new { @class = "form-control" })
+                </div>
+                <div class="form-group">
+                    <div class="input-group">
+                        @Html.TextBoxFor(m => m.QueryText, new { @class = "form-control", placeholder = "用户相关信息" })
+                        <span class="input-group-btn">
+                            <a href="javascript:;" class="btn btn-primary" ng-click="getList()">
+                                <span class="glyphicon glyphicon-search"></span>
+                                搜  索
+                            </a>
+                        </span>
+                    </div>
+                </div>
+                @if (User.Identity.CheckActionRight("0502", ActionTypes.Create))
+                {
+                    <div class="form-group">
+                        <a class="btn btn-primary" href="javascript:;" ng-click="userModal()">
+                            <i class="icon-plus"></i>
+                            添加用户
+                        </a>
+                    </div>
+                }
+            </div>
+        </form>
+        <div class="row">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th width="100">
+                            <span class="line"></span>
+                            @Html.DisplayNameFor(m => m.UserName)
+                        </th>
+                        <th width="100">
+                            <span class="line"></span>
+                            角色
+                        </th>
+                        <th width="100">
+                            <span class="line"></span>
+                            @Html.DisplayNameFor(m => m.UserState)
+                        </th>
+                        <th width="100">
+                            <span class="line"></span>
+                            @Html.DisplayNameFor(m => m.Email)
+                        </th>
+                        <th width="200">
+                            <span class="line"></span>
+                            @Html.DisplayNameFor(m => m.PhoneNumber)
+                        </th>
+                        <th  width="200">
+                            <span class="line"></span>
+                            @Html.DisplayNameFor(m => m.CreateTime)
+                        </th>
+                        <th width="100">
+                            <span class="line"></span>
+                            @Html.DisplayNameFor(m => m.Operator)
+                        </th>
+                        <th width="200">
+                            <span class="line"></span>
+                            @Html.DisplayNameFor(m => m.Remark)
+                        </th>
+                        <th width="300">
+                            <span class="line"></span>
+                            操作
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="c in List">
+                        <td ng-bind="c.UserName"></td>
+                        <td ng-bind="c.RoleName"></td>
+                        <td ng-bind="c.UserState |userStateFilter"></td>
+                        <td ng-bind="c.Email"></td>
+                        <td ng-bind="c.PhoneNumber"></td>
+                        <td ng-bind="c.CreateTime.replace('T',' ')"></td>
+                        <td ng-bind="c.Operator"></td>
+                        <td ng-bind="c.Remark"></td>
+                        <td>
+                            <ul class="actions" ng-hide="c.UserName === 'sa'">
+                                @if (User.Identity.CheckActionRight("0502", ActionTypes.Update))
+                                {
+                                    <li ng-show="c.UserState===0">
+                                        <a ng-click="userModal(c.Id)" href="javascript:;">修改</a>
+                                    </li>
+                                    <li ng-show="c.UserState===1">
+                                        <a ng-click="operate('UpdateState',c.Id,0,$event,'恢复')" href="javascript:;">恢复</a>
+                                    </li>
+                                    <li ng-show="c.UserState===0">
+                                        <a ng-click="operate('UpdateState',c.Id,1,$event,'锁定')" href="javascript:;">锁定</a>
+                                    </li>
+                                }
+                                @if (User.Identity.CheckActionRight("0502", ActionTypes.Delete))
+                                {
+                                    <li ng-show="c.UserState!=1">
+                                        <a ng-click="operate('delete',c.Id,2,$event,'删除')" href="javascript:;">删除</a>
+                                    </li>
+                                }
+                            </ul>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            @Html.Partial("_PaginationPartial")
+        </div>
+    </div>
+    @Html.Partial("_CreatePartial", null)
+</div>
+@section scripts{
+    @Scripts.Render("~/bundles/angular")
+    <script src="~/Scripts/page/page.user.js"></script>
+}

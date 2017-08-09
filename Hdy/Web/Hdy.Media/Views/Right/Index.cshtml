@@ -1,0 +1,109 @@
+﻿@using Framework.Auth;
+@model List<ParentMenuItem>
+@{
+    Layout = "~/Views/Shared/_LayoutTab.cshtml";
+    ViewBag.Title = "权限管理";
+}
+@section styles{
+    <link href="~/content/tables.css" type="text/css" rel="stylesheet" />
+    <style>
+        .table-wrapper .table ul.actions {
+            float: none;
+        }
+
+        .table-wrapper, .table-wrapper .filter-block {
+            margin-bottom: 15px;
+        }
+    </style>
+}
+<div id="pad-wrapper" ng-app="rightApp" ng-controller="RightCtrl">
+    <div class="table-wrapper products-table section">
+        <form id="queryForm" class="form-inline">
+            <div class="row filter-block">
+                <div class="form-group">
+                    <label>请选择角色：</label>
+                    @Html.DropDownList("roleId", (IEnumerable<SelectListItem>)ViewBag.Roles, "请选择角色", new { @class = "form-control" })
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="row">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>模块名称</th>
+                    <th>子菜单名称</th>
+                    <th>功能</th>
+                    <th>功能</th>
+                    <th>功能</th>
+                    <th>功能</th>
+                    <th>功能</th>
+                </tr>
+            </thead>
+            <tbody id="contanier">
+                @for (int i = 0; i < Model.Count; i++)
+                {
+                    var menu = Model[i];
+                    <tr>
+                        <td rowspan="@(menu.SubMenuList.Count+1)">
+                            <label><input type="checkbox" data-index="[@i,-1]" data-role="parent" ng-model="rights[@i].All" ng-disabled="rights.length==0" ng-change="change(@i,-1,rights[@i].All)" />@menu.Name</label>
+                        </td>
+                        @if (menu.SubMenuList.Count == 0)
+                        {
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        }
+                    </tr>
+                    for (int j = 0; j < menu.SubMenuList.Count; j++)
+                    {
+                        var item = menu.SubMenuList[j];
+                        <tr>
+                            <td>
+                                <label><input type="checkbox" data-index="[@i,@j]" data-role="sub" ng-model="rights[@i].SubRightList[@j].All" ng-disabled="rights.length==0" ng-change="change(@i,@j,rights[@i].SubRightList[@j].All)" />@item.Name</label>
+                            </td>
+                            <td>
+                                @if (item.Select)
+                    {
+                                    <label><input type="checkbox" data-index="[@i,@j]" ng-model="rights[@i].SubRightList[@j].Select" ng-disabled="rights.length==0" ng-change="actionChange(@i)" />查询</label>
+                                }
+                            </td>
+                            <td>
+                                @if (item.Create)
+                    {
+                                    <label><input type="checkbox" data-index="[@i,@j]" ng-model="rights[@i].SubRightList[@j].Create" ng-disabled="rights.length==0" ng-change="actionChange(@i)" />增加</label>
+                                }
+                            </td>
+                            <td>
+                                @if (item.Update)
+                    {
+                                    <label><input type="checkbox" data-index="[@i,@j]" ng-model="rights[@i].SubRightList[@j].Update" ng-disabled="rights.length==0" ng-change="actionChange(@i)" />修改</label>
+                                }
+                            </td>
+                            <td>
+                                @if (item.Delete)
+                    {
+                                    <label><input type="checkbox" data-index="[@i,@j]" ng-model="rights[@i].SubRightList[@j].Delete" ng-disabled="rights.length==0" ng-change="actionChange(@i)" />删除</label>
+                                }
+                            </td>
+                            <td>
+                                @if (item.Auditing)
+                    {
+                                    <label><input type="checkbox" data-index="[@i,@j]" ng-model="rights[@i].SubRightList[@j].Auditing" ng-disabled="rights.length==0" ng-change="actionChange(@i)" />审核</label>
+                                }
+                            </td>
+                        </tr>
+                    }
+
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+@section scripts{
+    @Scripts.Render("~/bundles/angular")
+    <script src="~/Scripts/page/page.right.js"></script>
+}

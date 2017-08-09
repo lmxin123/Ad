@@ -1,0 +1,6 @@
+﻿.hdy-red{
+    color:red;
+}
+.checkbox-inline+.checkbox-inline, .radio-inline+.radio-inline{
+    margin-left:0;
+}

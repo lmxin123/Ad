@@ -1,0 +1,124 @@
+﻿@{
+    Layout = "~/Views/Shared/_LayoutTab.cshtml";
+    ViewBag.Title = "终端分类";
+}
+@model  DeviceCategoryModel
+@section styles{
+    <link href="~/content/tables.css" type="text/css" rel="stylesheet" />
+    <style>
+        .table-wrapper .table ul.actions {
+            float: none;
+        }
+
+        .table-wrapper, .table-wrapper .filter-block {
+            margin-bottom: 15px;
+        }
+    </style>
+}
+<div id="pad-wrapper" ng-app="categoryApp" ng-controller="CategoryCtrl">
+    <div class="table-wrapper products-table section">
+        <form id="queryForm" class="form-inline">
+            <div class="row filter-block">
+                @if (User.Identity.CheckActionRight("0402", ActionTypes.Create))
+                {
+                    <div class="form-group">
+                        <a class="btn btn-primary" href="javascript:;" ng-click="categoryModal()">
+                            <i class="icon-plus"></i>
+                            添加分类
+                        </a>
+                    </div>
+                }
+            </div>
+        </form>
+        <div class="row">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th width="100">
+                            <span class="line"></span>
+                            @Html.DisplayNameFor(m => m.Name)
+                        </th>
+                        <th width="200">
+                            <span class="line"></span>
+                            @Html.DisplayNameFor(m => m.CreateDate)
+                        </th>
+                        <th width="100">
+                            <span class="line"></span>
+                            @Html.DisplayNameFor(m => m.Operator)
+                        </th>
+                        <th width="300">
+                            <span class="line"></span>
+                            @Html.DisplayNameFor(m => m.Remark)
+                        </th>
+                        <th width="200">
+                            <span class="line"></span>
+                            操作
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="c in List">
+                        <td ng-bind="c.Name"></td>
+                        <td ng-bind="c.CreateDateDisplay"></td>
+                        <td ng-bind="c.Operator"></td>
+                        <td ng-bind="c.Remark"></td>
+                        <td>
+                            <ul class="actions">
+                                @if (User.Identity.CheckActionRight("0402", ActionTypes.Update))
+                                {
+                                    <li>
+                                        <a href="javascript:;" ng-click="categoryModal(c.ID)">修改</a>
+                                    </li>
+                                }
+                                @if (User.Identity.CheckActionRight("0402", ActionTypes.Delete))
+                                {
+                                    <li class="last">
+                                        <a href="javascript:;" ng-click="delete(c.ID,$event)">删除</a>
+                                    </li>
+                                }
+                            </ul>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            @Html.Partial("_PaginationPartial")
+        </div>
+    </div>
+    <div class="modal fade" id="categoryModal" tabindex="-1" role="dialog" aria-labelledby="categoryModal" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">{{category.ID?'修改':'添加'}}分类</h4>
+                </div>
+                <div class="modal-body">
+                    <form role="form" method="post" class="form-horizontal" id="categoryForm">
+                        <input type="hidden" name="ID" value="{{category.ID}}" />
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">@Html.DisplayNameFor(m => m.Name)：</label>
+                            <div class="col-sm-7">
+                                @Html.TextBoxFor(m => m.Name, new { @class = "form-control", @ng_model = "category.Name" })
+                                @Html.ValidationMessageFor(m => m.Name)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">@Html.DisplayNameFor(m => m.Remark)：</label>
+                            <div class="col-sm-7">
+                                @Html.TextAreaFor(m => m.Remark, 4, 0, new { @class = "form-control", @ng_model = "category.Remark" })
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button id="btnCheck" type="button" class="btn btn-primary">保 存</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取 消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts{
+    @Scripts.Render("~/bundles/angular")
+    <script src="~/Scripts/jquery.area.js"></script>
+    <script src="~/Scripts/page/page.deviceCategory.js"></script>
+}

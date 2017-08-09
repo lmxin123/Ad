@@ -1,0 +1,76 @@
+﻿@using Framework.Auth;
+<header class="navbar navbar-inverse navbar-fixed-top" role="banner">
+    <div class="navbar-header">
+        <a class="navbar-brand" href="/home"><img src="~/Content/img/hdy_logo.png" width="210" alt="logo图片" /></a>
+    </div>
+    <ul class="nav navbar-nav pull-right hidden-xs">
+        <li class="dropdown">
+            <a href="#" class="dropdown-toggle hidden-xs hidden-sm" data-toggle="dropdown">
+                @User.Identity.Name
+                <b class="caret"></b>
+            </a>
+            <ul class="dropdown-menu">
+                <li>
+                    <a data-toggle="modal" href="#resetPwdModal">修改密码</a>
+                </li>
+            </ul>
+        </li>
+        <li class="settings hidden-xs hidden-sm">
+            <a id="loginOut" href="javascript:if(confirm('确定要退出系统吗？')) location.href='/user/logOut';" role="button" title="退出系统">
+                <span class="glyphicon glyphicon-off"></span> 退出
+            </a>
+        </li>
+    </ul>
+</header>
+@{
+    string conName = ViewContext.RouteData.Values["controller"].ToString().ToLower(),
+     actionName = "/" + conName + "/" + ViewContext.RouteData.Values["action"].ToString().ToLower();
+    //pointerHtml = "<div class=\"pointer\"><div class=\"arrow\"></div><div class=\"arrow_border\" ></div></div>";
+    var rights = User.Identity.GetUserRight();
+}
+<div id="sidebar-nav">
+    <ul id="dashboard-menu">
+        @foreach (var right in rights)
+        {
+            if (right.All)
+            {
+                bool isActive = false;
+                if (string.IsNullOrEmpty(right.Url))
+                {
+                    var urls = right.SubMenuList.Select(item => item.Url.Substring(1, item.Url.LastIndexOf('/') - 1).ToLower());
+                    isActive = urls.Contains(conName);
+                }
+                else
+                {
+                    isActive = right.Url.IndexOf(conName) >= 0;
+                }
+                <li @(isActive ? "class=active" : "")>
+                    @*@if (isActive)
+                        {
+                            @Html.Raw(pointerHtml);
+                        }*@
+                    <a @(right.SubMenuList.Count > 0 ? "class=dropdown-toggle" : "") href="@(right.Url??"javascript:;")">
+                        <i class="@right.Icon"></i>
+                        <span>@right.Name</span>
+                        @if (right.SubMenuList.Count > 0)
+                        {
+                            <i class="icon-chevron-down"></i>
+                        }
+                    </a>
+                    @if (right.SubMenuList.Count > 0)
+                    {
+                        <ul class="@(isActive ? "active" : "") submenu">
+                            @foreach (var subRight in right.SubMenuList)
+                        {
+                                <li>
+                                    <a href="@subRight.Url" class="@(actionName == subRight.Url ? "active" : "")">@subRight.Name</a>
+                                </li>
+                            }
+                        </ul>
+                    }
+                </li>
+            }
+        }
+    </ul>
+</div>
+@Html.Partial("_ResetPasswordPartial", new ResetPasswordViewModel { Name = User.Identity.Name })

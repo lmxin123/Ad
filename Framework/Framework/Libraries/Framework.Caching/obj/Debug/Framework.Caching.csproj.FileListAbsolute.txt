@@ -1,0 +1,11 @@
+G:\Framework\Framework\Libraries\Framework.Caching\bin\Debug\Framework.Caching.dll
+G:\Framework\Framework\Libraries\Framework.Caching\bin\Debug\Framework.Caching.pdb
+G:\Framework\Framework\Libraries\Framework.Caching\obj\Debug\Framework.Caching.dll
+G:\Framework\Framework\Libraries\Framework.Caching\obj\Debug\Framework.Caching.pdb
+G:\Framework\Framework\Release\Framework.Caching.dll
+G:\Framework\Framework\Release\Framework.Caching.pdb
+G:\Framework\Framework\Libraries\Framework.Caching\obj\Debug\Framework.Caching.csprojResolveAssemblyReference.cache
+G:\work\Framework\Framework\Release\Framework.Caching.dll
+G:\work\Framework\Framework\Release\Framework.Caching.pdb
+G:\work\Framework\Framework\Libraries\Framework.Caching\obj\Debug\Framework.Caching.dll
+G:\work\Framework\Framework\Libraries\Framework.Caching\obj\Debug\Framework.Caching.pdb
