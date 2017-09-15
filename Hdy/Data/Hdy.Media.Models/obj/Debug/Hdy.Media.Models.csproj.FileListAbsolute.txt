@@ -309,10 +309,6 @@ G:\work\svn\Ad\Hdy\Data\Hdy.Media.Models\bin\Debug\Microsoft.Owin.Host.SystemWeb
 G:\work\svn\Ad\Hdy\Data\Hdy.Media.Models\bin\Debug\Microsoft.Owin.Security.Cookies.dll
 G:\work\svn\Ad\Hdy\Data\Hdy.Media.Models\bin\Debug\Microsoft.Extensions.Logging.Abstractions.dll
 G:\work\svn\Ad\Hdy\Data\Hdy.Media.Models\bin\Debug\ICSharpCode.SharpZipLib.dll
-G:\work\svn\Ad\Hdy\Data\Hdy.Media.Models\bin\Debug\System.Web.Razor.dll
-G:\work\svn\Ad\Hdy\Data\Hdy.Media.Models\bin\Debug\System.Web.WebPages.dll
-G:\work\svn\Ad\Hdy\Data\Hdy.Media.Models\bin\Debug\Microsoft.Web.Infrastructure.dll
-G:\work\svn\Ad\Hdy\Data\Hdy.Media.Models\bin\Debug\System.Web.WebPages.Deployment.dll
 G:\work\svn\Ad\Hdy\Data\Hdy.Media.Models\bin\Debug\Framework.Auth.pdb
 G:\work\svn\Ad\Hdy\Data\Hdy.Media.Models\bin\Debug\Framework.Auth.dll.config
 G:\work\svn\Ad\Hdy\Data\Hdy.Media.Models\bin\Debug\Framework.Common.pdb
@@ -330,9 +326,6 @@ G:\work\svn\Ad\Hdy\Data\Hdy.Media.Models\bin\Debug\Microsoft.AspNet.Identity.Ent
 G:\work\svn\Ad\Hdy\Data\Hdy.Media.Models\bin\Debug\Microsoft.Owin.Host.SystemWeb.xml
 G:\work\svn\Ad\Hdy\Data\Hdy.Media.Models\bin\Debug\Microsoft.Owin.Security.Cookies.xml
 G:\work\svn\Ad\Hdy\Data\Hdy.Media.Models\bin\Debug\Microsoft.Extensions.Logging.Abstractions.xml
-G:\work\svn\Ad\Hdy\Data\Hdy.Media.Models\bin\Debug\System.Web.Razor.xml
-G:\work\svn\Ad\Hdy\Data\Hdy.Media.Models\bin\Debug\System.Web.WebPages.xml
-G:\work\svn\Ad\Hdy\Data\Hdy.Media.Models\bin\Debug\System.Web.WebPages.Deployment.xml
 G:\work\svn\Ad\Hdy\Data\Hdy.Media.Models\bin\Debug\zh-Hans\EntityFramework.resources.dll
 G:\work\svn\Ad\Hdy\Data\Hdy.Media.Models\bin\Debug\zh-Hans\EntityFramework.SqlServer.resources.dll
 G:\work\svn\Ad\Hdy\Data\Hdy.Media.Models\bin\Debug\zh-Hans\System.Web.Mvc.resources.dll
@@ -342,9 +335,6 @@ G:\work\svn\Ad\Hdy\Data\Hdy.Media.Models\bin\Debug\zh-Hans\Microsoft.Owin.resour
 G:\work\svn\Ad\Hdy\Data\Hdy.Media.Models\bin\Debug\zh-Hans\Microsoft.Owin.Security.resources.dll
 G:\work\svn\Ad\Hdy\Data\Hdy.Media.Models\bin\Debug\zh-Hans\Microsoft.AspNet.Identity.EntityFramework.resources.dll
 G:\work\svn\Ad\Hdy\Data\Hdy.Media.Models\bin\Debug\zh-Hans\Microsoft.Owin.Host.SystemWeb.resources.dll
-G:\work\svn\Ad\Hdy\Data\Hdy.Media.Models\bin\Debug\zh-Hans\System.Web.Razor.resources.dll
-G:\work\svn\Ad\Hdy\Data\Hdy.Media.Models\bin\Debug\zh-Hans\System.Web.WebPages.resources.dll
-G:\work\svn\Ad\Hdy\Data\Hdy.Media.Models\bin\Debug\zh-Hans\System.Web.WebPages.Deployment.resources.dll
 G:\work\svn\Ad\Hdy\Data\Hdy.Media.Models\obj\Debug\Hdy.Media.Models.csprojResolveAssemblyReference.cache
 G:\work\svn\Ad\Hdy\Data\Hdy.Media.Models\obj\Debug\Hdy.Media.Models.Migrations._234234.resources
 G:\work\svn\Ad\Hdy\Data\Hdy.Media.Models\obj\Debug\Hdy.Media.Models.Migrations._234235656.resources

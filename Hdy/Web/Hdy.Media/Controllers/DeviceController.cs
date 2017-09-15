@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using System.Data.Entity.Validation;
 
 namespace Hdy.Media.Controllers
 {
@@ -89,6 +90,11 @@ namespace Hdy.Media.Controllers
                 await _DeviceManager.SaveAsync(model);
 
                 return Success(true);
+            }
+            catch (DbEntityValidationException e)
+            {
+                string msg = string.Join(",", e.EntityValidationErrors.Select(a => string.Join(",", a.ValidationErrors.Select(b => b.ErrorMessage).ToList())).ToList());
+                return Fail(ErrorCode.ProcessError, msg);
             }
             catch (Exception e)
             {

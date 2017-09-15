@@ -40,7 +40,7 @@
                         $scope.device.ID = arguments[0];
                         $scope.device.Name = $scope.List[i].Name;
                         $scope.device.Address = $scope.List[i].Address;
-                        //$scope.device.DeviceCode = $scope.List[i].DeviceCode;
+                        $scope.device.DeviceCode = $scope.List[i].DeviceCode;
                         $scope.device.Province = $scope.List[i].Province;
                         $scope.device.City = $scope.List[i].City;
                         $scope.device.Region = $scope.List[i].Region;
@@ -57,6 +57,7 @@
                     }
                 }
             }
+            ui.deviceModal.modal('show');
             //else {
             //    $http.get('/device/getDeviceCode').success(function (resp) {
             //        if (resp.Success) {

@@ -301,7 +301,7 @@ namespace Framework.Common.IO
         public string GetStorageFullName(string name, bool isThumb = false)
         {
             string path = string.Empty,
-                extansion = Utility.GetFileSuffix(name);
+                extansion = Utility.GetFileSuffix(name).ToLower();
             if (isThumb)
             {
                 path = HttpContext.Current.Server.MapPath(StorageThumbPath ?? StorageDefaultPath);

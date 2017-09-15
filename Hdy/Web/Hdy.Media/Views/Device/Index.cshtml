@@ -154,6 +154,7 @@
                 <div class="modal-body">
                     <form role="form" method="post" class="form-horizontal" id="deviceForm">
                         @Html.AntiForgeryToken()
+                        <input type="hidden" name="DeviceCode" value="{{device.DeviceCode}}" />
                         <input type="hidden" name="ID" value="{{device.ID}}" />
                         <div class="form-group">
                             <label class="col-sm-3 control-label">@Html.DisplayNameFor(m => m.Province)<span class="hdy-red">*</span>：</label>
@@ -193,12 +194,12 @@
                             </div>
                         </div>
                         @*<div class="form-group">
-                            <label class="col-sm-3 control-label">@Html.DisplayNameFor(m => m.DeviceCode)<span class="hdy-red">*</span>：</label>
-                            <div class="col-sm-7">
-                                @Html.TextBoxFor(m => m.DeviceCode, new { @class = "form-control", @ng_model = "device.DeviceCode", @readonly = true, data_clear = false })
-                                @Html.ValidationMessageFor(m => m.DeviceCode)
-                            </div>
-                        </div>*@
+                                <label class="col-sm-3 control-label">@Html.DisplayNameFor(m => m.DeviceCode)<span class="hdy-red">*</span>：</label>
+                                <div class="col-sm-7">
+                                    @Html.TextBoxFor(m => m.DeviceCode, new { @class = "form-control", @ng_model = "device.DeviceCode", @readonly = true, data_clear = false })
+                                    @Html.ValidationMessageFor(m => m.DeviceCode)
+                                </div>
+                            </div>*@
                         <div class="form-group">
                             <label class="col-sm-3 control-label">@Html.DisplayNameFor(m => m.CategoryID)<span class="hdy-red">*</span>：</label>
                             <div class="col-sm-7">
